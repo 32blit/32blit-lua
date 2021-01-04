@@ -230,7 +230,7 @@ typedef unsigned int IdxT;
 */
 #if !defined(l_randomizePivot)		/* { */
 
-#include <time.h>
+//#include <time.h>
 
 /* size of 'e' measured in number of 'unsigned int's */
 #define sof(e)		(sizeof(e) / sizeof(unsigned int))
@@ -242,8 +242,8 @@ typedef unsigned int IdxT;
 ** is to copy them to an array of a known type and use the array values.
 */
 static unsigned int l_randomizePivot (void) {
-  clock_t c = clock();
-  time_t t = time(NULL);
+  uint32_t c = LUA_TIME_FUNC;
+  uint32_t t = LUA_TIME_FUNC;
   unsigned int buff[sof(c) + sof(t)];
   unsigned int i, rnd = 0;
   memcpy(buff, &c, sof(c) * sizeof(unsigned int));
