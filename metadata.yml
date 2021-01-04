@@ -1,8 +1,8 @@
-title: game title
-description: game description
-author: you
+title: Lua
+description: 32blit Lua engine
+author: pimoroni
 splash:
-  file: assets/no-image.png
+  file: assets/splash.png
 icon:
   file: assets/no-icon.png
 version: v0.0.1
