@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(lua)
 
-add_library(lua
+add_library(lua STATIC
     lapi.c
     lauxlib.c
     lbaselib.c
@@ -35,3 +35,7 @@ add_library(lua
     #liolib.c
     #loslib.c
 )
+
+if(${CMAKE_SYSTEM_NAME} STREQUAL Generic)
+    set_target_properties(lua PROPERTIES COMPILE_FLAGS "-fPIC -mno-pic-data-is-text-relative -mno-single-pic-base")
+endif()
