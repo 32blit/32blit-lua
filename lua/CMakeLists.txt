@@ -35,7 +35,3 @@ add_library(lua STATIC
     #liolib.c
     #loslib.c
 )
-
-if(${CMAKE_SYSTEM_NAME} STREQUAL Generic)
-    set_target_properties(lua PROPERTIES COMPILE_FLAGS "-fPIC -mno-pic-data-is-text-relative -mno-single-pic-base")
-endif()
