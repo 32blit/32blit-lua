@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include "stdio-wrap.hpp"
 #include "lua/lua.hpp"
 
 using namespace blit;
@@ -67,7 +68,9 @@ void init() {
     luaL_setfuncs(L, lua_c_functions, 0);
     lua_pop(L, 1);
 
-    luaL_loadstring(L,
+    luaL_loadfile(L, "/main.lua");
+
+    /*luaL_loadstring(L,
         "function init()\n"
         "   debug(\"hello world\")\n"
         "end\n"
@@ -85,7 +88,7 @@ void init() {
         "   pixel(x, y, 0, 0, 255)\n"
         "   debug(time)\n"
         "end\n"
-    );
+    );*/
 
     // Super important priming call that makes stuff not explode
     lua_pcall(L, 0, 0, 0);

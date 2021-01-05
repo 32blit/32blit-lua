@@ -34,4 +34,8 @@ add_library(lua STATIC
     ldblib.c
     #liolib.c
     #loslib.c
+    wrap/stdio.cpp
 )
+
+target_include_directories(lua SYSTEM PUBLIC wrap)
+target_include_directories(lua PRIVATE ${32BLIT_PATH}/32blit)
