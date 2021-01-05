@@ -68,7 +68,14 @@ void init() {
     luaL_setfuncs(L, lua_c_functions, 0);
     lua_pop(L, 1);
 
-    luaL_loadfile(L, "/main.lua");
+    auto launchPath = blit::get_launch_path();
+    if(launchPath) {
+        luaL_loadfile(L, launchPath);
+    }
+    else
+    {
+        luaL_loadfile(L, "/main.lua");
+    }
 
     /*luaL_loadstring(L,
         "function init()\n"

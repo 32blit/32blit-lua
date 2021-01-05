@@ -6,4 +6,6 @@ splash:
 icon:
   file: assets/no-icon.png
 version: v0.0.1
-
+category: engine
+filetypes:
+  - lua
