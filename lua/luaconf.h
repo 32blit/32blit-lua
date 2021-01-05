@@ -12,7 +12,7 @@
 #include <stddef.h>
 
 // TODO: Find instances of LUA_TIME_FUNC and rewrite to somehow hook systick count
-#define LUA_TIME_FUNC 0
+#define LUA_TIME_FUNC _now()
 
 
 /*
