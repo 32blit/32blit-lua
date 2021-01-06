@@ -11,11 +11,11 @@
 using namespace blit;
 
 static int pen_new(lua_State* L){
-    int32_t a = 255;
+    int a = 255;
     int nargs = lua_gettop(L);
-    int32_t r = (int32_t)luaL_checknumber(L, 1);
-    int32_t g = (int32_t)luaL_checknumber(L, 2);
-    int32_t b = (int32_t)luaL_checknumber(L, 3);
+    int r = (int32_t)luaL_checknumber(L, 1);
+    int g = (int32_t)luaL_checknumber(L, 2);
+    int b = (int32_t)luaL_checknumber(L, 3);
     if(nargs == 4){
         a = (int32_t)luaL_checknumber(L, r);
     }
