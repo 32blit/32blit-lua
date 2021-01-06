@@ -52,12 +52,22 @@ void init() {
 
 void render(uint32_t time) {
     if(!has_render) return;
+    uint32_t ms_start = now();
     lua_getglobal(L, "render");
     lua_pushnumber(L, time);
     if(lua_pcall(L, 1, 0, 0) != 0){
         blit::debugf("Error running function `render`: %s\n", lua_tostring(L, -1));
     }
     lua_gc(L, LUA_GCCOLLECT, 0);
+    uint32_t ms_end = now();
+
+    // draw FPS meter
+    screen.mask = nullptr;
+    screen.pen = Pen(255, 0, 0);
+    for (unsigned int i = 0; i < (ms_end - ms_start); i++) {
+        screen.pen = Pen(i * 5, 255 - (i * 5), 0);
+        screen.rectangle(Rect(i * 6 + 2, screen.bounds.h - 6, 4, 4));
+    }
 }
 
 void update(uint32_t time) {
