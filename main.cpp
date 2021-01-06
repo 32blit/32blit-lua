@@ -35,6 +35,7 @@ void init() {
             blit::debugf("Error running function `init`: %s\n", lua_tostring(L, -1));
         }
     }
+    lua_gc(L, LUA_GCCOLLECT, 0);
 
     lua_getglobal(L, "update");
     if(!lua_isfunction(L, lua_gettop(L))){
@@ -56,6 +57,7 @@ void render(uint32_t time) {
     if(lua_pcall(L, 1, 0, 0) != 0){
         blit::debugf("Error running function `render`: %s\n", lua_tostring(L, -1));
     }
+    lua_gc(L, LUA_GCCOLLECT, 0);
 }
 
 void update(uint32_t time) {
