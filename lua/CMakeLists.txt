@@ -25,15 +25,15 @@ add_library(lua STATIC
     lundump.c
     lvm.c
     lzio.c
-    #lcorolib.c
+    lcorolib.c
     lmathlib.c
     lstrlib.c
     ltablib.c
     lutf8lib.c
     loadlib.c
     ldblib.c
-    #liolib.c
-    #loslib.c
+    liolib.c
+    loslib.c
     wrap/stdio.cpp
 )
 

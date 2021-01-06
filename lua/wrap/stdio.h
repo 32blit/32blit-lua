@@ -20,6 +20,7 @@ long wrap_ftell(wrap_FILE *file);
 
 int wrap_feof(wrap_FILE *file);
 int wrap_ferror(wrap_FILE *file);
+int wrap_clearerr(wrap_FILE *file);
 
 extern wrap_FILE *wrap_stdin;
 extern wrap_FILE *wrap_stdout;
@@ -39,6 +40,7 @@ extern wrap_FILE *wrap_stderr;
 #define ftell wrap_ftell
 #define feof wrap_feof
 #define ferror wrap_ferror
+#define clearerr wrap_clearerr
 
 #ifdef __cplusplus
 }

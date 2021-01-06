@@ -11,9 +11,6 @@
 #include <limits.h>
 #include <stddef.h>
 
-// TODO: Find instances of LUA_TIME_FUNC and rewrite to somehow hook systick count
-#define LUA_TIME_FUNC _now()
-
 
 /*
 ** ===================================================================
@@ -45,6 +42,7 @@
 ** or Windows-specific features on Windows.
 */
 /* #define LUA_USE_C89 */
+
 
 /*
 ** By default, Lua on Windows use (some) specific Windows features
@@ -657,8 +655,6 @@
 ** Change that if you do not want to use C locales. (Code using this
 ** macro must include the header 'locale.h'.)
 */
-#define lua_getlocaledecpoint()		(0)
-
 #if !defined(lua_getlocaledecpoint)
 #define lua_getlocaledecpoint()		(localeconv()->decimal_point[0])
 #endif
@@ -710,7 +706,7 @@
 ** (It must fit into max(size_t)/32.)
 */
 #if LUAI_IS32INT
-#define LUAI_MAXSTACK		250000
+#define LUAI_MAXSTACK		1000000
 #else
 #define LUAI_MAXSTACK		15000
 #endif

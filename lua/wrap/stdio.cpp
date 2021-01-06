@@ -131,3 +131,8 @@ int wrap_ferror(wrap_FILE *file)
 {
     return 0;
 }
+
+int wrap_clearerr(wrap_FILE *file)
+{
+    return 0;
+}
