@@ -1,3 +1,5 @@
+#ifdef TARGET_32BLIT_HW
+
 #include <stdio.h>
 
 #include "engine/file.hpp"
@@ -136,3 +138,5 @@ int wrap_clearerr(wrap_FILE *file)
 {
     return 0;
 }
+
+#endif

@@ -1,54 +1,13 @@
 #include "main.hpp"
 #include "stdio-wrap.hpp"
 #include "lua/lua.hpp"
+#include "luablitlib.hpp"
 
 using namespace blit;
 
 lua_State *L;
 bool has_update = true;
 bool has_render = true;
-
-#ifndef _off_t
-#define _off_t int
-#endif
-
-extern "C" {
-    int _close(int) {return 0;}
-    int _fstat(int, struct stat *) {return 0;}
-    int _isatty(int) {return 0;}
-    _off_t _lseek(int, _off_t, int) {return 0;}
-    int _read(int, void *, size_t) {return 0;}
-    int _write(int, const void *, size_t) {return 0;}
-    int _now() {return blit::now();};
-}
-
-
-int lua_setPixel(lua_State* L) {
-    int nargs = lua_gettop(L);
-    unsigned int x = luaL_checknumber(L, 1);
-    unsigned int y = luaL_checknumber(L, 2);
-    unsigned int r = luaL_checknumber(L, 3);
-    unsigned int g = luaL_checknumber(L, 4);
-    unsigned int b = luaL_checknumber(L, 5);
-    screen.pen = Pen(r, g, b, 255);
-    screen.pixel(Point(x, y));
-    lua_pop(L, nargs);
-
-    return 0;
-}
-
-int lua_debug(lua_State* L) {
-    int nargs = lua_gettop(L);
-
-    for (int i = 1; i <= nargs; i++) {
-        if (lua_isstring(L, i)) {
-            const char *str = lua_tostring(L, i);
-            blit::debugf(str);
-        }
-    }
-
-    return 0;
-}
 
 void init() {
     set_screen_mode(ScreenMode::hires);
@@ -57,53 +16,23 @@ void init() {
 
     L = luaL_newstate();
     luaL_openlibs(L);
-
-    luaL_Reg lua_c_functions[] = {
-        {"debug", lua_debug},
-        {"pixel", lua_setPixel},
-        {NULL, NULL}
-    };
-
-    lua_getglobal(L, "_G");
-    luaL_setfuncs(L, lua_c_functions, 0);
-    lua_pop(L, 1);
+    luaL_requiref(L, "blit", luaopen_blit, 1);
 
     auto launchPath = blit::get_launch_path();
-    if(launchPath) {
-        luaL_loadfile(L, launchPath);
+    if(!launchPath) {
+        launchPath = "main.lua";
     }
-    else
-    {
-        luaL_loadfile(L, "/main.lua");
-    }
-
-    /*luaL_loadstring(L,
-        "function init()\n"
-        "   debug(\"hello world\")\n"
-        "end\n"
-        "\n"
-        "function update(time)\n"
-        "end\n"
-        "\n"
-        "function render(time)\n"
-        "   pixel(10, 10, 0, 255, 0)\n"
-        "   pixel(11, 10, 0, 255, 0)\n"
-        "   pixel(10, 11, 0, 255, 0)\n"
-        "   pixel(11, 11, 0, 255, 0)\n"
-        "   local x = math.random(0, 319)\n"
-        "   local y = math.random(0, 239)\n"
-        "   pixel(x, y, 0, 0, 255)\n"
-        "   debug(time)\n"
-        "end\n"
-    );*/
+    luaL_loadfile(L, launchPath);
 
     // Super important priming call that makes stuff not explode
-    lua_pcall(L, 0, 0, 0);
+    if(lua_pcall(L, 0, 0, 0) != 0){
+        blit::debugf("Error loading %s: %s\n", launchPath, lua_tostring(L, -1));
+    }
 
     lua_getglobal(L, "init");
     if(lua_isfunction(L, lua_gettop(L))){
         if(lua_pcall(L, 0, 0, 0) != 0){
-            blit::debugf("Error running function `setup`: %s\n", lua_tostring(L, -1));
+            blit::debugf("Error running function `init`: %s\n", lua_tostring(L, -1));
         }
     }
 

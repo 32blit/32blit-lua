@@ -4,7 +4,7 @@ project(32blit_lua)
 set(32BLIT_PATH "../" CACHE PATH "Path to 32blit.cmake")
 add_subdirectory("lua")
 
-set(PROJECT_SOURCE main.cpp main.hpp)
+set(PROJECT_SOURCE main.cpp main.hpp luablitlib.cpp luablitlib.hpp)
 set(PROJECT_DISTRIBS LICENSE README.md)
 
 # Build configuration; approach this with caution!
@@ -21,6 +21,9 @@ include (${32BLIT_PATH}/32blit.cmake)
 blit_executable (${PROJECT_NAME} ${PROJECT_SOURCE})
 # blit_assets_yaml (${PROJECT_NAME} assets.yml)
 blit_metadata (${PROJECT_NAME} metadata.yml)
+
+target_include_directories(${PROJECT_NAME} PRIVATE lua)
+
 target_link_libraries(${PROJECT_NAME} lua)
 add_custom_target (flash DEPENDS ${PROJECT_NAME}.flash)
 
