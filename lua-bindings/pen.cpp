@@ -9,7 +9,7 @@ static int pen_new(lua_State* L){
     int g = (int32_t)luaL_checknumber(L, 2);
     int b = (int32_t)luaL_checknumber(L, 3);
     if(nargs == 4){
-        a = (int32_t)luaL_checknumber(L, r);
+        a = (int32_t)luaL_checknumber(L, 4);
     }
     lua_pop(L, nargs);
     new(lua_newuserdata(L, sizeof(Pen))) Pen(r, g, b, a);
