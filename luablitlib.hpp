@@ -14,6 +14,7 @@
 #define LUA_BLIT_RECT "Rect"
 
 LUAMOD_API int luaopen_blit (lua_State *L);
+void lua_blit_update_state(lua_State *L);
 
 void lua_blit_register_point(lua_State *L);
 blit::Point* lua_blit_checkpoint(lua_State *L, int arg);

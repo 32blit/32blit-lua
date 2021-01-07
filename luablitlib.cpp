@@ -11,6 +11,11 @@
 
 using namespace blit;
 
+static int clear(lua_State *L) {
+    screen.clear();
+    return 0;
+}
+
 static int pen(lua_State *L) {
     int nargs = lua_gettop(L);
     Pen *p = lua_blit_checkpen(L, 1);
@@ -49,10 +54,24 @@ static int debug(lua_State* L) {
     return 0;
 }
 
+void lua_blit_update_state(lua_State *L) {
+    lua_pushnumber(L, buttons.pressed);
+    lua_setglobal(L, "pressed");
+    lua_pushnumber(L, buttons.released);
+    lua_setglobal(L, "released");
+    lua_pushnumber(L, buttons.state);
+    lua_setglobal(L, "state");
+
+    new(lua_newuserdata(L, sizeof(Vec2))) Vec2(joystick);
+    luaL_setmetatable(L, LUA_BLIT_VEC2);
+    lua_setglobal(L, "joystick");
+}
+
 static const luaL_Reg funcs[] = {
     {"pen", pen},
     {"pixel", pixel},
     {"rectangle", rectangle},
+    {"clear", clear},
     {"debug", debug},
     {NULL, NULL}
 };
@@ -66,6 +85,25 @@ LUAMOD_API int luaopen_blit (lua_State *L) {
     lua_blit_register_size(L);
     lua_blit_register_rect(L);
     lua_blit_register_sprites(L);
+
+    lua_pushnumber(L, Button::A);
+    lua_setglobal(L, "A");
+    lua_pushnumber(L, Button::B);
+    lua_setglobal(L, "B");
+    lua_pushnumber(L, Button::X);
+    lua_setglobal(L, "X");
+    lua_pushnumber(L, Button::Y);
+    lua_setglobal(L, "Y");
+    lua_pushnumber(L, Button::DPAD_UP);
+    lua_setglobal(L, "UP");
+    lua_pushnumber(L, Button::DPAD_DOWN);
+    lua_setglobal(L, "DOWN");
+    lua_pushnumber(L, Button::DPAD_LEFT);
+    lua_setglobal(L, "LEFT");
+    lua_pushnumber(L, Button::DPAD_RIGHT);
+    lua_setglobal(L, "RIGHT");
+    lua_pushnumber(L, Button::MENU);
+    lua_setglobal(L, "MENU");
 
     return 1;
 }

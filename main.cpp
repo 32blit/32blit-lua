@@ -72,6 +72,7 @@ void render(uint32_t time) {
 
 void update(uint32_t time) {
     if(!has_update) return;
+    lua_blit_update_state(L);
     lua_getglobal(L, "update");
     lua_pushnumber(L, time);
     if(lua_pcall(L, 1, 0, 0) != 0){
