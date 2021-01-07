@@ -4,7 +4,15 @@ project(32blit_lua)
 set(32BLIT_PATH "../" CACHE PATH "Path to 32blit.cmake")
 add_subdirectory("lua")
 
-set(PROJECT_SOURCE main.cpp main.hpp luablitlib.cpp luablitlib.hpp)
+set(PROJECT_SOURCE
+  main.cpp
+  luablitlib.cpp
+  lua-bindings/pen.cpp
+  lua-bindings/point.cpp
+  lua-bindings/size.cpp
+  lua-bindings/vec2.cpp
+  lua-bindings/rect.cpp
+  lua-bindings/sprites.cpp)
 set(PROJECT_DISTRIBS LICENSE README.md)
 
 # Build configuration; approach this with caution!
