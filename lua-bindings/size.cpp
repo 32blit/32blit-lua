@@ -22,9 +22,17 @@ static int size_index(lua_State* L){
     int nargs = lua_gettop(L);
     Size *size = reinterpret_cast<Size*>(lua_touserdata(L, 1));
     std::string method = luaL_checkstring(L, 2);
+    if (nargs == 3) {
+        uint32_t value = luaL_checknumber(L, 3);
+        lua_pop(L, nargs);
+        if(method == "w") {size->w = value; return 0;}
+        if(method == "h") {size->h = value; return 0;}
+    }
     lua_pop(L, nargs);
     if(method == "w") {lua_pushnumber(L, size->w); return 1;}
     if(method == "h") {lua_pushnumber(L, size->h); return 1;}
+
+    luaL_error(L, "Unknown property or method `%s` on %s", method.c_str(), LUA_BLIT_SIZE);
     return 0;
 }
 
@@ -38,5 +46,6 @@ void lua_blit_register_size(lua_State *L) {
     luaL_newmetatable(L, LUA_BLIT_SIZE);
     lua_pushcfunction(L, size_delete); lua_setfield(L, -2, "__gc");
     lua_pushcfunction(L, size_index); lua_setfield(L, -2, "__index");
+    lua_pushcfunction(L, size_index); lua_setfield(L, -2, "__newindex");
     lua_pop(L, 1);
 }
