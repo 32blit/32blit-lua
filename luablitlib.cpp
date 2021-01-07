@@ -32,6 +32,15 @@ static int pixel(lua_State *L) {
     return 0;
 }
 
+static int line(lua_State *L) {
+    int nargs = lua_gettop(L);
+    Point *a = lua_blit_checkpoint(L, 1);
+    Point *b = lua_blit_checkpoint(L, 2);
+    screen.line(*a, *b);
+    lua_pop(L, nargs);
+    return 0;
+}
+
 static int rectangle(lua_State *L) {
     int nargs = lua_gettop(L);
     Rect *r = lua_blit_checkrect(L, 1);
@@ -70,6 +79,7 @@ void lua_blit_update_state(lua_State *L) {
 static const luaL_Reg funcs[] = {
     {"pen", pen},
     {"pixel", pixel},
+    {"line", line},
     {"rectangle", rectangle},
     {"clear", clear},
     {"debug", debug},
