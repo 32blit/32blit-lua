@@ -17,6 +17,7 @@ void init() {
     L = luaL_newstate();
     luaL_openlibs(L);
     luaL_requiref(L, "blit", luaopen_blit, 1);
+    lua_blit_update_state(L);
 
     auto launchPath = blit::get_launch_path();
     if(!launchPath) {
