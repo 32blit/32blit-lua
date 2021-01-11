@@ -1,5 +1,4 @@
 #include "main.hpp"
-#include "stdio-wrap.hpp"
 #include "lua/lua.hpp"
 #include "luablitlib.hpp"
 
