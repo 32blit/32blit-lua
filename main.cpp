@@ -48,6 +48,8 @@ void init() {
         blit::debugf("Error `render` is not defined\n");
         has_render = false;
     }
+
+    lua_gc(L, LUA_GCSETPAUSE, 170);
 }
 
 void render(uint32_t time) {
