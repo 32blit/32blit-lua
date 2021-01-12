@@ -21,7 +21,7 @@ static int vec2_delete(lua_State* L){
 static int vec2_index(lua_State* L){
     int nargs = lua_gettop(L);
     Vec2 *vec2 = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
-    std::string method = luaL_checkstring(L, 2);
+    std::string_view method = luaL_checkstring(L, 2);
     if (nargs == 3) {
         float value = luaL_checknumber(L, 3);
         lua_pop(L, nargs);
@@ -32,7 +32,7 @@ static int vec2_index(lua_State* L){
     if(method == "x") {lua_pushnumber(L, vec2->x); return 1;}
     if(method == "y") {lua_pushnumber(L, vec2->y); return 1;}
 
-    luaL_error(L, "Unknown property or method `%s` on %s", method.c_str(), LUA_BLIT_VEC2);
+    luaL_error(L, "Unknown property or method `%s` on %s", method.data(), LUA_BLIT_VEC2);
     return 0;
 }
 
