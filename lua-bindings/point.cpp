@@ -32,7 +32,7 @@ static int point_index(lua_State* L){
     Point *point = reinterpret_cast<Point*>(lua_touserdata(L, 1));
     std::string_view method = luaL_checkstring(L, 2);
     if (nargs == 3) {
-        uint32_t value = luaL_checknumber(L, 3);
+        int32_t value = luaL_checknumber(L, 3);
         lua_pop(L, nargs);
         if(method == "x") {point->x = value; return 0;}
         if(method == "y") {point->y = value; return 0;}
