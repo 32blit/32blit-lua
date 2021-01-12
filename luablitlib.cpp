@@ -9,6 +9,8 @@
 
 #include "luablitlib.hpp"
 
+#include "graphics/color.hpp"
+
 using namespace blit;
 
 static int clear(lua_State *L) {
@@ -63,6 +65,17 @@ static int debug(lua_State* L) {
     return 0;
 }
 
+static int hsv_to_rgba(lua_State *L) {
+    float h = luaL_checknumber(L, 1);
+    float s = luaL_checknumber(L, 2);
+    float v = luaL_checknumber(L, 3);
+
+    auto tmp = blit::hsv_to_rgba(h, s, v);
+    new(lua_newuserdata(L, sizeof(Pen))) Pen(tmp);
+    luaL_setmetatable(L, LUA_BLIT_PEN);
+    return 1;
+}
+
 void lua_blit_update_state(lua_State *L) {
     lua_pushnumber(L, buttons.pressed);
     lua_setglobal(L, "pressed");
@@ -83,6 +96,7 @@ static const luaL_Reg funcs[] = {
     {"rectangle", rectangle},
     {"clear", clear},
     {"debug", debug},
+    {"hsv_to_rgba", hsv_to_rgba},
     {NULL, NULL}
 };
 
