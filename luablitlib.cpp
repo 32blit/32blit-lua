@@ -100,8 +100,7 @@ static int hsv_to_rgba(lua_State *L) {
     float v = luaL_checknumber(L, 3);
 
     auto tmp = blit::hsv_to_rgba(h, s, v);
-    new(lua_newuserdata(L, sizeof(Pen))) Pen(tmp);
-    luaL_setmetatable(L, LUA_BLIT_PEN);
+    lua_blit_pushpen(L, tmp);
     return 1;
 }
 

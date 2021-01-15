@@ -21,6 +21,7 @@ void lua_blit_pushpoint(lua_State* L, blit::Point p);
 blit::Point* lua_blit_checkpoint(lua_State *L, int arg);
 
 void lua_blit_register_pen(lua_State *L);
+void lua_blit_pushpen(lua_State *L, blit::Pen p);
 blit::Pen* lua_blit_checkpen(lua_State *L, int arg);
 
 void lua_blit_register_vec2(lua_State *L);
