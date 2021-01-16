@@ -34,6 +34,24 @@ static int pixel(lua_State *L) {
     return 0;
 }
 
+static int h_span(lua_State *L) {
+    int nargs = lua_gettop(L);
+    Point *p = lua_blit_checkpoint(L, 1);
+    auto c = luaL_checkinteger(L, 2);
+    screen.h_span(*p, c);
+    lua_pop(L, nargs);
+    return 0;
+}
+
+static int v_span(lua_State *L) {
+    int nargs = lua_gettop(L);
+    Point *p = lua_blit_checkpoint(L, 1);
+    auto c = luaL_checkinteger(L, 2);
+    screen.v_span(*p, c);
+    lua_pop(L, nargs);
+    return 0;
+}
+
 static int line(lua_State *L) {
     int nargs = lua_gettop(L);
     Point *a = lua_blit_checkpoint(L, 1);
@@ -92,6 +110,8 @@ void lua_blit_update_state(lua_State *L) {
 static const luaL_Reg funcs[] = {
     {"pen", pen},
     {"pixel", pixel},
+    {"h_span", h_span},
+    {"v_span", v_span},
     {"line", line},
     {"rectangle", rectangle},
     {"clear", clear},
