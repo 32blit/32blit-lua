@@ -21,7 +21,7 @@ static int size_delete(lua_State* L){
 static int size_index(lua_State* L){
     int nargs = lua_gettop(L);
     Size *size = reinterpret_cast<Size*>(lua_touserdata(L, 1));
-    std::string method = luaL_checkstring(L, 2);
+    std::string_view method = luaL_checkstring(L, 2);
     if (nargs == 3) {
         uint32_t value = luaL_checknumber(L, 3);
         lua_pop(L, nargs);
@@ -32,7 +32,7 @@ static int size_index(lua_State* L){
     if(method == "w") {lua_pushnumber(L, size->w); return 1;}
     if(method == "h") {lua_pushnumber(L, size->h); return 1;}
 
-    luaL_error(L, "Unknown property or method `%s` on %s", method.c_str(), LUA_BLIT_SIZE);
+    luaL_error(L, "Unknown property or method `%s` on %s", method.data(), LUA_BLIT_SIZE);
     return 0;
 }
 

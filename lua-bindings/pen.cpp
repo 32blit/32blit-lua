@@ -26,7 +26,7 @@ static int pen_delete(lua_State* L){
 static int pen_index(lua_State* L){
     int nargs = lua_gettop(L);
     Pen *pen = reinterpret_cast<Pen*>(lua_touserdata(L, 1));
-    std::string method = luaL_checkstring(L, 2);
+    std::string_view method = luaL_checkstring(L, 2);
     if (nargs == 3) {
         uint32_t value = luaL_checknumber(L, 3);
         lua_pop(L, nargs);
@@ -41,7 +41,7 @@ static int pen_index(lua_State* L){
     if(method == "b") {lua_pushnumber(L, pen->b); return 1;}
     if(method == "a") {lua_pushnumber(L, pen->a); return 1;}
 
-    luaL_error(L, "Unknown property or method `%s` on %s", method.c_str(), LUA_BLIT_PEN);
+    luaL_error(L, "Unknown property or method `%s` on %s", method.data(), LUA_BLIT_PEN);
     return 0;
 }
 

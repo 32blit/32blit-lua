@@ -30,9 +30,9 @@ static int point_delete(lua_State* L){
 static int point_index(lua_State* L){
     int nargs = lua_gettop(L);
     Point *point = reinterpret_cast<Point*>(lua_touserdata(L, 1));
-    std::string method = luaL_checkstring(L, 2);
+    std::string_view method = luaL_checkstring(L, 2);
     if (nargs == 3) {
-        uint32_t value = luaL_checknumber(L, 3);
+        int32_t value = luaL_checknumber(L, 3);
         lua_pop(L, nargs);
         if(method == "x") {point->x = value; return 0;}
         if(method == "y") {point->y = value; return 0;}
@@ -41,7 +41,7 @@ static int point_index(lua_State* L){
     if(method == "x") {lua_pushnumber(L, point->x); return 1;}
     if(method == "y") {lua_pushnumber(L, point->y); return 1;}
 
-    luaL_error(L, "Unknown property or method `%s` on %s", method.c_str(), LUA_BLIT_POINT);
+    luaL_error(L, "Unknown property or method `%s` on %s", method.data(), LUA_BLIT_POINT);
     return 0;
 }
 
