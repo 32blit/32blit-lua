@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
 project(32blit_lua)
-set(32BLIT_PATH "../" CACHE PATH "Path to 32blit.cmake")
 add_subdirectory("lua")
 
 set(PROJECT_SOURCE
@@ -21,10 +20,7 @@ if(MSVC)
 else()
   add_compile_options("-Wall" "-Wextra" "-Wdouble-promotion")
 endif()
-if(NOT EXISTS ${32BLIT_PATH}/32blit.cmake)
-  message(FATAL_ERROR "Could not find ${32BLIT_PATH}/32blit.cmake\nDefine location of 32Blit API with -D32BLIT_PATH=<path to 32blit.cmake>")
-endif()
-include (${32BLIT_PATH}/32blit.cmake)
+find_package(32BLIT CONFIG REQUIRED PATHS ../ /opt)
 
 blit_executable (${PROJECT_NAME} ${PROJECT_SOURCE})
 # blit_assets_yaml (${PROJECT_NAME} assets.yml)
