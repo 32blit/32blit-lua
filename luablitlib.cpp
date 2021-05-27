@@ -70,11 +70,30 @@ static int rectangle(lua_State *L) {
 }
 
 static int text(lua_State *L) {
-    int nargs = lua_gettop(L);
-    Point *p = lua_blit_checkpoint(L, 1);
-    std::string_view message = luaL_checkstring(L, 2);
-    screen.text(message, minimal_font, *p);
-    lua_pop(L, nargs);
+    size_t len;
+    auto ptr = luaL_checklstring(L, 1, &len);
+    auto message = std::string_view(ptr, len);
+
+    // TODO: handle invalid font
+    blit::Font *font = (blit::Font *)lua_touserdata(L, 2);
+
+    // TODO: helper
+    auto point = reinterpret_cast<Point *>(luaL_testudata(L, 3, LUA_BLIT_POINT));
+
+    if(point) {
+        screen.text(message, *font, *point);
+        return 0;
+    }
+
+    auto rect = reinterpret_cast<Point *>(luaL_testudata(L, 3, LUA_BLIT_RECT));
+
+    if(rect) {
+        screen.text(message, *font, *rect);
+        return 0;
+    }
+
+    // error?
+
     return 0;
 }
 
@@ -172,6 +191,13 @@ LUAMOD_API int luaopen_blit (lua_State *L) {
     lua_setglobal(L, "RIGHT");
     lua_pushnumber(L, Button::MENU);
     lua_setglobal(L, "MENU");
+
+    lua_pushlightuserdata(L, (void *)(&minimal_font));
+    lua_setglobal(L, "minimal_font");
+    lua_pushlightuserdata(L, (void *)(&fat_font));
+    lua_setglobal(L, "fat_font");
+    lua_pushlightuserdata(L, (void *)(&outline_font));
+    lua_setglobal(L, "outline_font");
 
     return 1;
 }
