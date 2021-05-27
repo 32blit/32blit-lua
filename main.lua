@@ -14,6 +14,28 @@ function init()
     vec2.y = 2
     vec2 = Vec2(vec2.x, vec2.y)
 
+    local rect = Rect(0, 0, 10, 10)
+    rect:contains(Point(5, 5))
+    w = rect.size.w
+    h = rect.size.h
+
+    result = Rect(5, 4, 6, 6):intersection(Rect(4, 4, 6, 3))
+    print(result.x, result.y, result.w, result.h)
+
+    result = Rect(5, 5, 10, 10)
+    result:inflate(1)
+    print(result.x, result.y, result.w, result.h)
+
+    clamp_point = Point(3, 3)
+    clamped_point = Rect(5, 5, 10, 10):clamp(clamp_point)
+    print(clamped_point.x, clamped_point.y)
+
+    local vecA = Vec2(10, 10)
+    local vecB = Vec2(10, 10)
+    dot = vecA:dot(vecB)
+    cross = vecA:cross(vecB)
+    angle = vecA:angle(vecB)
+
     local size = Size(10, 10);
     size.w = 1
     size.h = 2

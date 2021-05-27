@@ -17,18 +17,22 @@ LUAMOD_API int luaopen_blit (lua_State *L);
 void lua_blit_update_state(lua_State *L);
 
 void lua_blit_register_point(lua_State *L);
+void lua_blit_pushpoint(lua_State* L, blit::Point p);
 blit::Point* lua_blit_checkpoint(lua_State *L, int arg);
 
 void lua_blit_register_pen(lua_State *L);
 blit::Pen* lua_blit_checkpen(lua_State *L, int arg);
 
 void lua_blit_register_vec2(lua_State *L);
+void lua_blit_pushvec2(lua_State* L, blit::Vec2 p);
 blit::Vec2* lua_blit_checkvec2(lua_State *L, int arg);
 
 void lua_blit_register_size(lua_State *L);
+void lua_blit_pushsize(lua_State* L, blit::Size p);
 blit::Size* lua_blit_checksize(lua_State *L, int arg);
 
 void lua_blit_register_rect(lua_State *L);
+void lua_blit_pushrect(lua_State* L, blit::Rect p);
 blit::Rect* lua_blit_checkrect(lua_State *L, int arg);
 
 void lua_blit_register_sprites(lua_State *L);

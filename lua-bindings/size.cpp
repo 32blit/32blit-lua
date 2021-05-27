@@ -36,6 +36,11 @@ static int size_index(lua_State* L){
     return 0;
 }
 
+void lua_blit_pushsize(lua_State* L, Size p) {
+    new(lua_newuserdata(L, sizeof(Size))) Size(p);
+    luaL_setmetatable(L, LUA_BLIT_SIZE);
+}
+
 Size* lua_blit_checksize(lua_State *L, int arg) {
     auto size = luaL_checkudata(L, arg, LUA_BLIT_SIZE);
     return reinterpret_cast<Size*>(size);
