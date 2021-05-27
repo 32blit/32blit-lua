@@ -69,6 +69,15 @@ static int rectangle(lua_State *L) {
     return 0;
 }
 
+static int text(lua_State *L) {
+    int nargs = lua_gettop(L);
+    Point *p = lua_blit_checkpoint(L, 1);
+    std::string_view message = luaL_checkstring(L, 2);
+    screen.text(message, minimal_font, *p);
+    lua_pop(L, nargs);
+    return 0;
+}
+
 
 static int watermark(lua_State *L) {
     screen.watermark();
@@ -105,6 +114,7 @@ static int hsv_to_rgba(lua_State *L) {
 }
 
 void lua_blit_update_state(lua_State *L) {
+    // TODO lua does not have bitwise operators so we need a more direct way to read button state
     lua_pushnumber(L, buttons.pressed);
     lua_setglobal(L, "pressed");
     lua_pushnumber(L, buttons.released);
@@ -124,6 +134,7 @@ static const luaL_Reg funcs[] = {
     {"v_span", v_span},
     {"line", line},
     {"rectangle", rectangle},
+    {"text", text},
     {"clear", clear},
     {"watermark", watermark},
     {"now", now},
@@ -141,6 +152,7 @@ LUAMOD_API int luaopen_blit (lua_State *L) {
     lua_blit_register_size(L);
     lua_blit_register_rect(L);
     lua_blit_register_sprites(L);
+    lua_blit_register_timer(L);
 
     lua_pushnumber(L, Button::A);
     lua_setglobal(L, "A");

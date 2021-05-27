@@ -11,7 +11,8 @@ set(PROJECT_SOURCE
   lua-bindings/size.cpp
   lua-bindings/vec2.cpp
   lua-bindings/rect.cpp
-  lua-bindings/sprites.cpp)
+  lua-bindings/sprites.cpp
+  lua-bindings/timer.cpp)
 set(PROJECT_DISTRIBS LICENSE README.md)
 
 # Build configuration; approach this with caution!
