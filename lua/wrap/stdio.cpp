@@ -20,9 +20,32 @@ struct wrap_FILE
 
 wrap_FILE *wrap_fopen(const char *filename, const char *mode)
 {
-    auto ret = new wrap_FILE;
+    int blit_mode;
 
-    ret->file.open(filename);
+    // no append mode
+    if(mode[0] != 'r' && mode[0] != 'w')
+        return nullptr;
+
+    // ignore b flag
+    int i = 1;
+    if(mode[i] == 'b')
+        i++;
+
+    if(mode[0] == 'r')
+    {
+        if(mode[i] != 0) return nullptr; // no r+
+
+        blit_mode = blit::OpenMode::read;
+    }
+    else if(mode[0] == 'w')
+    {
+        blit_mode = blit::OpenMode::write;
+        if(mode[i] == '+')
+            blit_mode |= blit::OpenMode::read;
+    }
+
+    auto ret = new wrap_FILE;
+    ret->file.open(filename, blit_mode);
     ret->offset = 0;
 
     ret->getc_buf_len = ret->getc_buf_off = 0;
