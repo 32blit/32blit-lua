@@ -18,6 +18,12 @@ static int clear(lua_State *L) {
     return 0;
 }
 
+static int clip(lua_State *L) {
+    Rect *r = lua_blit_checkrect(L, 1);
+    screen.clip = *r;
+    return 0;
+}
+
 static int pen(lua_State *L) {
     int nargs = lua_gettop(L);
     Pen *p = lua_blit_checkpen(L, 1);
@@ -69,6 +75,28 @@ static int rectangle(lua_State *L) {
     return 0;
 }
 
+static int wrap_text(lua_State *L) {
+    int nargs = lua_gettop(L);
+    size_t len;
+    auto ptr = luaL_checklstring(L, 1, &len);
+    auto message = std::string_view(ptr, len);
+
+    // TODO: helper
+    auto width = luaL_checkinteger(L, 2);
+
+    // TODO: handle invalid font
+    blit::Font *font = (blit::Font *)lua_touserdata(L, 3);
+
+    auto variable = true;
+    if(nargs >= 4) {
+        variable = lua_toboolean(L, 4);
+    }
+
+    std::string text = screen.wrap_text(message, width, *font, variable);
+    lua_pushlstring(L, text.data(), text.length());
+    return 1;
+}
+
 static int text(lua_State *L) {
     size_t len;
     auto ptr = luaL_checklstring(L, 1, &len);
@@ -81,14 +109,14 @@ static int text(lua_State *L) {
     auto point = reinterpret_cast<Point *>(luaL_testudata(L, 3, LUA_BLIT_POINT));
 
     if(point) {
-        screen.text(message, *font, *point);
+        screen.text(message, *font, *point, true, TextAlign::top_left);
         return 0;
     }
 
     auto rect = reinterpret_cast<Point *>(luaL_testudata(L, 3, LUA_BLIT_RECT));
 
     if(rect) {
-        screen.text(message, *font, *rect);
+        screen.text(message, *font, *rect, true, TextAlign::top_left);
         return 0;
     }
 
@@ -154,7 +182,9 @@ static const luaL_Reg funcs[] = {
     {"line", line},
     {"rectangle", rectangle},
     {"text", text},
+    {"wrap_text", wrap_text},
     {"clear", clear},
+    {"clip", clip},
     {"watermark", watermark},
     {"now", now},
     {"debug", debug},

@@ -89,10 +89,8 @@ static int rect_index(lua_State* L){
     int nargs = lua_gettop(L);
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     std::string_view method = luaL_checkstring(L, 2);
-    lua_pop(L, nargs);
     if(nargs == 3) {
         int32_t value = luaL_checknumber(L, 3);
-        lua_pop(L, nargs);
         if(method == "x") {rect->x = value; return 0;}
         if(method == "y") {rect->y = value; return 0;}
         if(method == "w") {rect->w = value; return 0;}
