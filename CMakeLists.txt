@@ -23,7 +23,7 @@ endif()
 find_package(32BLIT CONFIG REQUIRED PATHS ../ /opt)
 
 blit_executable (${PROJECT_NAME} ${PROJECT_SOURCE})
-# blit_assets_yaml (${PROJECT_NAME} assets.yml)
+blit_assets_yaml (${PROJECT_NAME} assets.yml)
 blit_metadata (${PROJECT_NAME} metadata.yml)
 
 target_include_directories(${PROJECT_NAME} PRIVATE lua)
