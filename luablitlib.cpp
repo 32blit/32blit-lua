@@ -69,6 +69,17 @@ static int rectangle(lua_State *L) {
     return 0;
 }
 
+
+static int watermark(lua_State *L) {
+    screen.watermark();
+    return 0;
+}
+
+static int now(lua_State *L) {
+    lua_pushinteger(L, blit::now());
+    return 1;
+}
+
 static int debug(lua_State* L) {
     int nargs = lua_gettop(L);
 
@@ -115,6 +126,8 @@ static const luaL_Reg funcs[] = {
     {"line", line},
     {"rectangle", rectangle},
     {"clear", clear},
+    {"watermark", watermark},
+    {"now", now},
     {"debug", debug},
     {"hsv_to_rgba", hsv_to_rgba},
     {NULL, NULL}
