@@ -1,6 +1,8 @@
 #ifdef TARGET_32BLIT_HW
 
+#include <cstdarg>
 #include <stdio.h>
+#include <cstring>
 
 #include "engine/file.hpp"
 
@@ -59,11 +61,26 @@ wrap_FILE *wrap_fopen(const char *filename, const char *mode)
     return ret;
 }
 
+wrap_FILE *wrap_freopen(const char *filename, const char *mode, wrap_FILE *file)
+{
+    file->file.close();
+    auto tmp = wrap_fopen(filename, mode);
+    *file = std::move(*tmp);
+    delete tmp;
+
+    return file;
+}
+
 int wrap_fclose(wrap_FILE *file)
 {
     file->file.close();
     delete file;
     return 0;
+}
+
+int wrap_setvbuf(wrap_FILE *file, char *buffer, int mode, size_t size)
+{
+    return 0; // stub - there are a few levels of buffering...
 }
 
 size_t wrap_fread(void *buffer, size_t size, size_t count, wrap_FILE *file)
@@ -101,6 +118,16 @@ int wrap_fgetc(wrap_FILE *file)
     return EOF;
 }
 
+char *wrap_fgets(char *str, int count, wrap_FILE *file)
+{
+    return nullptr; // TODO (only used by debug lib)
+}
+
+int wrap_ungetc(int ch, wrap_FILE *file)
+{
+    return EOF; // TODO
+}
+
 size_t wrap_fwrite(const void *buffer, size_t size, size_t count, wrap_FILE *file)
 {
     if(!file) return 0;
@@ -118,6 +145,25 @@ size_t wrap_fwrite(const void *buffer, size_t size, size_t count, wrap_FILE *fil
     return ret < 0 ? 0 : ret / size;
 }
 
+int wrap_fprintf(wrap_FILE *file, const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    // get length
+    va_list tmp_args;
+    va_copy(tmp_args, args);
+    int len = vsnprintf(nullptr, 0, format, tmp_args) + 1;
+    va_end(tmp_args);
+
+    auto buf = new char[len];
+    int ret = vsnprintf(buf, len, format, args);
+    ret = wrap_fwrite(buf, 1, ret, file);
+    va_end(args);
+
+    delete[] buf;
+    return ret;
+}
 
 int wrap_fseek(wrap_FILE *file, long offset, int origin)
 {
@@ -158,6 +204,11 @@ int wrap_ferror(wrap_FILE *file)
 }
 
 int wrap_clearerr(wrap_FILE *file)
+{
+    return 0;
+}
+
+int wrap_fflush(wrap_FILE *file)
 {
     return 0;
 }
