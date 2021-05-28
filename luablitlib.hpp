@@ -15,7 +15,10 @@
 #define LUA_BLIT_TIMER "Timer"
 
 LUAMOD_API int luaopen_blit (lua_State *L);
+void lua_blit_setup_globals (lua_State *L);
 void lua_blit_update_state(lua_State *L);
+
+void lua_blit_setup_screen (lua_State *L);
 
 void lua_blit_register_point(lua_State *L);
 void lua_blit_pushpoint(lua_State* L, blit::Point p);
@@ -36,8 +39,5 @@ blit::Size* lua_blit_checksize(lua_State *L, int arg);
 void lua_blit_register_rect(lua_State *L);
 void lua_blit_pushrect(lua_State* L, blit::Rect p);
 blit::Rect* lua_blit_checkrect(lua_State *L, int arg);
-
-void lua_blit_register_sprites(lua_State *L);
-
 
 void lua_blit_register_timer(lua_State *L);

@@ -41,7 +41,7 @@ static int load_sprites(lua_State *L) {
         delete screen.sprites;
         screen.sprites = nullptr;
     }
-    screen.sprites = SpriteSheet::load(filename);
+    screen.sprites = Surface::load(filename);
     return 0;
 }
 

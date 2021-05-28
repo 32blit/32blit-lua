@@ -100,6 +100,7 @@ static int rect_index(lua_State* L){
     if(method == "y") {lua_pushnumber(L, rect->y); return 1;}
     if(method == "w") {lua_pushnumber(L, rect->w); return 1;}
     if(method == "h") {lua_pushnumber(L, rect->h); return 1;}
+    if(method == "center") {lua_blit_pushpoint(L, rect->center()); return 1;}
     if(method == "size") {
         lua_blit_pushsize(L, rect->size());
         return 1;

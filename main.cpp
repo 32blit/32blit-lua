@@ -9,13 +9,14 @@ bool has_update = true;
 bool has_render = true;
 
 void init() {
-    set_screen_mode(ScreenMode::hires);
+    set_screen_mode(ScreenMode::lores);
     screen.pen = Pen(0, 0, 0, 255);
     screen.clear();
 
     L = luaL_newstate();
     luaL_openlibs(L);
     luaL_requiref(L, "blit", luaopen_blit, 1);
+    lua_blit_setup_globals(L);
     lua_blit_update_state(L);
 
     auto launchPath = blit::get_launch_path();
