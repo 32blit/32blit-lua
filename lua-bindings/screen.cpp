@@ -99,11 +99,31 @@ static int rectangle(lua_State *L) {
     return 0;
 }
 
+static int measure_text(lua_State *L) {
+    int nargs = lua_gettop(L);
+    size_t len;
+    auto ptr = luaL_checklstring(L, 1, &len);
+    auto message = std::string_view(ptr, len);
+    auto variable = true;
+
+    // TODO: handle invalid font
+    blit::Font *font = (blit::Font *)lua_touserdata(L, 2);
+
+    if(nargs >= 3) {
+        variable = lua_toboolean(L, 3);
+    }
+
+    auto result = screen.measure_text(message, *font, variable);
+    lua_blit_pushsize(L, result);
+    return 1;
+}
+
 static int wrap_text(lua_State *L) {
     int nargs = lua_gettop(L);
     size_t len;
     auto ptr = luaL_checklstring(L, 1, &len);
     auto message = std::string_view(ptr, len);
+    auto variable = true;
 
     // TODO: helper
     auto width = luaL_checkinteger(L, 2);
@@ -111,7 +131,6 @@ static int wrap_text(lua_State *L) {
     // TODO: handle invalid font
     blit::Font *font = (blit::Font *)lua_touserdata(L, 3);
 
-    auto variable = true;
     if(nargs >= 4) {
         variable = lua_toboolean(L, 4);
     }
@@ -126,27 +145,32 @@ static int text(lua_State *L) {
     size_t len;
     auto ptr = luaL_checklstring(L, 1, &len);
     auto message = std::string_view(ptr, len);
+    auto variable = false;
     auto text_align = TextAlign::top_left;
 
     // TODO: handle invalid font
     blit::Font *font = (blit::Font *)lua_touserdata(L, 2);
 
     if(nargs >= 4) {
-        text_align = static_cast<TextAlign>(luaL_checkinteger(L, 4));
+        variable = lua_toboolean(L, 4);
+    }
+
+    if(nargs >= 5) {
+        text_align = static_cast<TextAlign>(luaL_checkinteger(L, 5));
     }
 
     // TODO: helper
     auto point = reinterpret_cast<Point *>(luaL_testudata(L, 3, LUA_BLIT_POINT));
 
     if(point) {
-        screen.text(message, *font, *point, true, text_align);
+        screen.text(message, *font, *point, variable, text_align);
         return 0;
     }
 
-    auto rect = reinterpret_cast<Point *>(luaL_testudata(L, 3, LUA_BLIT_RECT));
+    auto rect = reinterpret_cast<Rect *>(luaL_testudata(L, 3, LUA_BLIT_RECT));
 
     if(rect) {
-        screen.text(message, *font, *rect, true, text_align);
+        screen.text(message, *font, *rect, variable, text_align);
         return 0;
     }
 
@@ -176,13 +200,18 @@ static int screen_index(lua_State* L){
             screen.clip = *r;
             return 0;
         }
+        if(method == "alpha") {
+            screen.alpha = luaL_checkinteger(L, 3);
+            return 0;
+        }
     }
 
     if(method == "test") {lua_pushinteger(L, 59); return 1;}
     if(method == "bounds") {lua_blit_pushsize(L, screen.bounds); return 1;}
     if(method == "pen") {lua_blit_pushpen(L, screen.pen); return 1;}
+    if(method == "alpha") {lua_pushinteger(L, screen.alpha); return 1;}
 
-    luaL_error(L, "Unknown property or method `%s` on %s", std::string(method).c_str(), "blit");
+    luaL_error(L, "Unknown property or method `%s` on %s", std::string(method).c_str(), "screen");
     return 0;
 }
 
@@ -194,6 +223,7 @@ static const luaL_Reg screen_funcs[] = {
     {"rectangle", rectangle},
     {"text", text},
     {"wrap_text", wrap_text},
+    {"measure_text", measure_text},
     {"clear", clear},
     {"watermark", watermark},
     {"load_sprites", load_sprites},

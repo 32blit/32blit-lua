@@ -85,7 +85,7 @@ function init()
     ]]
   
   
-    local ms_end = screen.now()
+    local ms_end = blit.now()
   
   
     -- draw FPS meter
