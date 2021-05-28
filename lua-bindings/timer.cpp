@@ -64,7 +64,6 @@ static int timer_index(lua_State* L){
     int nargs = lua_gettop(L);
     Timer *timer = reinterpret_cast<Timer*>(lua_touserdata(L, 1));
     std::string_view method = luaL_checkstring(L, 2);
-    lua_pop(L, nargs);
 
     if(method == "init") {lua_pushcfunction(L, timer_init); return 1;}
     if(method == "start") {lua_pushcfunction(L, timer_start); return 1;}

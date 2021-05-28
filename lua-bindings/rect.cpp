@@ -7,7 +7,6 @@ static int rect_new(lua_State* L){
     if(nargs == 2){ // 2 args = Point and Size
         Point *point = lua_blit_checkpoint(L, 1);
         Size *size = lua_blit_checksize(L, 2);
-        lua_pop(L, nargs);
         lua_blit_pushrect(L, Rect(*point, *size));
     }
     else if(nargs == 4){ // 4 args = x, y, w and h
@@ -15,7 +14,6 @@ static int rect_new(lua_State* L){
         int y = (int32_t)luaL_checknumber(L, 2);
         int w = (int32_t)luaL_checknumber(L, 3);
         int h = (int32_t)luaL_checknumber(L, 4);
-        lua_pop(L, nargs);
         lua_blit_pushrect(L, Rect(x, y, w, h));
     }
     return 1;
@@ -32,7 +30,6 @@ static int rect_contains(lua_State* L){
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     Point *point = lua_blit_checkpoint(L, 2);
     bool result = rect->contains(*point);
-    lua_pop(L, nargs);
     lua_pushboolean(L, result);
     return 1;
 }
@@ -42,7 +39,6 @@ static int rect_intersects(lua_State* L){
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     Rect *test = lua_blit_checkrect(L, 2);
     bool result = rect->intersects(*test);
-    lua_pop(L, nargs);
     lua_pushboolean(L, result);
     return 1;
 }
@@ -52,7 +48,6 @@ static int rect_intersection(lua_State* L){
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     Rect *test = lua_blit_checkrect(L, 2);
     Rect result = rect->intersection(*test);
-    lua_pop(L, nargs);
     lua_blit_pushrect(L, result);
     return 1;
 }
@@ -62,7 +57,6 @@ static int rect_deflate(lua_State* L){
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     lua_Integer amount = luaL_checkinteger(L, 2);
     rect->deflate(amount);
-    lua_pop(L, nargs);
     return 0;
 }
 
@@ -71,7 +65,6 @@ static int rect_inflate(lua_State* L){
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     lua_Integer amount = luaL_checkinteger(L, 2);
     rect->inflate(amount);
-    lua_pop(L, nargs);
     return 0;
 }
 
@@ -80,7 +73,6 @@ static int rect_clamp(lua_State* L){
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     Point *point = lua_blit_checkpoint(L, 2);
     Point result = rect->clamp(*point);
-    lua_pop(L, nargs);
     lua_blit_pushpoint(L, result);
     return 1;
 }

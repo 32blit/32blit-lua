@@ -10,7 +10,6 @@ int sprite(lua_State *L) {
     if(lua_isinteger(L, 1)) {
         unsigned int i = lua_tointeger(L, 1);
         screen.sprite(i, *pos);
-        lua_pop(L, nargs);
         return 0;
     }
 
@@ -18,7 +17,6 @@ int sprite(lua_State *L) {
     auto p = reinterpret_cast<Point *>(luaL_testudata(L, 1, LUA_BLIT_POINT));
     if(p) {
         screen.sprite(*p, *pos);
-        lua_pop(L, nargs);
         return 0;
     }
 
@@ -26,20 +24,16 @@ int sprite(lua_State *L) {
     auto r = reinterpret_cast<Rect *>(luaL_testudata(L, 1, LUA_BLIT_RECT));
     if(r) {
         screen.sprite(*r, *pos);
-        lua_pop(L, nargs);
         return 0;
     }
 
     //error?
-
-    lua_pop(L, nargs);
     return 0;
 }
 
 int load_sprites(lua_State *L) {
     int nargs = lua_gettop(L);
     std::string filename = luaL_checkstring(L, 1);
-    lua_pop(L, nargs);
     if(screen.sprites != nullptr) {
         delete screen.sprites->data;
         delete screen.sprites->palette;

@@ -15,7 +15,6 @@ static int point_new(lua_State* L){
         x = (int32_t)luaL_checknumber(L, 1);
         y = (int32_t)luaL_checknumber(L, 2);
     }
-    lua_pop(L, nargs);
     new(lua_newuserdata(L, sizeof(Point))) Point(x, y);
     luaL_setmetatable(L, LUA_BLIT_POINT);
     return 1;
@@ -33,11 +32,9 @@ static int point_index(lua_State* L){
     std::string_view method = luaL_checkstring(L, 2);
     if (nargs == 3) {
         int32_t value = luaL_checknumber(L, 3);
-        lua_pop(L, nargs);
         if(method == "x") {point->x = value; return 0;}
         if(method == "y") {point->y = value; return 0;}
     }
-    lua_pop(L, nargs);
     if(method == "x") {lua_pushnumber(L, point->x); return 1;}
     if(method == "y") {lua_pushnumber(L, point->y); return 1;}
 

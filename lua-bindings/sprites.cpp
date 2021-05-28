@@ -34,7 +34,6 @@ static int sprite(lua_State *L) {
 static int load_sprites(lua_State *L) {
     int nargs = lua_gettop(L);
     std::string filename = luaL_checkstring(L, 1);
-    lua_pop(L, nargs);
     if(screen.sprites != nullptr) {
         delete screen.sprites->data;
         delete screen.sprites->palette;
