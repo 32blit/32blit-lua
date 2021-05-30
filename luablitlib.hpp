@@ -10,6 +10,7 @@
 #define LUA_BLIT_POINT "Point"
 #define LUA_BLIT_PEN "Pen"
 #define LUA_BLIT_VEC2 "Vec2"
+#define LUA_BLIT_VEC3 "Vec3"
 #define LUA_BLIT_SIZE "Size"
 #define LUA_BLIT_RECT "Rect"
 #define LUA_BLIT_TIMER "Timer"
@@ -31,6 +32,10 @@ blit::Pen* lua_blit_checkpen(lua_State *L, int arg);
 void lua_blit_register_vec2(lua_State *L);
 void lua_blit_pushvec2(lua_State* L, blit::Vec2 p);
 blit::Vec2* lua_blit_checkvec2(lua_State *L, int arg);
+
+void lua_blit_register_vec3(lua_State *L);
+void lua_blit_pushvec3(lua_State* L, blit::Vec3 p);
+blit::Vec3* lua_blit_checkvec3(lua_State *L, int arg);
 
 void lua_blit_register_size(lua_State *L);
 void lua_blit_pushsize(lua_State* L, blit::Size p);

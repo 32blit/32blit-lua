@@ -26,7 +26,6 @@ static int rect_delete(lua_State* L){
 }
 
 static int rect_contains(lua_State* L){
-    int nargs = lua_gettop(L);
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     Point *point = lua_blit_checkpoint(L, 2);
     bool result = rect->contains(*point);
@@ -35,7 +34,6 @@ static int rect_contains(lua_State* L){
 }
 
 static int rect_intersects(lua_State* L){
-    int nargs = lua_gettop(L);
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     Rect *test = lua_blit_checkrect(L, 2);
     bool result = rect->intersects(*test);
@@ -44,7 +42,6 @@ static int rect_intersects(lua_State* L){
 }
 
 static int rect_intersection(lua_State* L){
-    int nargs = lua_gettop(L);
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     Rect *test = lua_blit_checkrect(L, 2);
     Rect result = rect->intersection(*test);
@@ -53,7 +50,6 @@ static int rect_intersection(lua_State* L){
 }
 
 static int rect_deflate(lua_State* L){
-    int nargs = lua_gettop(L);
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     lua_Integer amount = luaL_checkinteger(L, 2);
     rect->deflate(amount);
@@ -61,7 +57,6 @@ static int rect_deflate(lua_State* L){
 }
 
 static int rect_inflate(lua_State* L){
-    int nargs = lua_gettop(L);
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     lua_Integer amount = luaL_checkinteger(L, 2);
     rect->inflate(amount);
@@ -69,7 +64,6 @@ static int rect_inflate(lua_State* L){
 }
 
 static int rect_clamp(lua_State* L){
-    int nargs = lua_gettop(L);
     Rect *rect = reinterpret_cast<Rect*>(lua_touserdata(L, 1));
     Point *point = lua_blit_checkpoint(L, 2);
     Point result = rect->clamp(*point);

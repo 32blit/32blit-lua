@@ -10,6 +10,7 @@ set(PROJECT_SOURCE
   lua-bindings/point.cpp
   lua-bindings/size.cpp
   lua-bindings/vec2.cpp
+  lua-bindings/vec3.cpp
   lua-bindings/rect.cpp
   lua-bindings/sprites.cpp
   lua-bindings/timer.cpp

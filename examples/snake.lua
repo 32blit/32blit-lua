@@ -16,7 +16,7 @@ score = 0
 sprite_snake = Point(9, 10)
 sprite_apple = Point(0, 0)
 
-game_bounds = Rect(0, 0, 320 / 8, 240 / 8)
+game_bounds = nil -- Should get initialised in init()
 
 function random_point()
     return Point(math.random(0, game_bounds.w - 1), math.random(0, game_bounds.h - 1))
@@ -34,16 +34,16 @@ function move(timer)
         return
     end
     top = snake[#snake - 0]
-    head = Point(top.x + direction.x, top.y + direction.y)
+    head = top + direction
     for i,segment in ipairs(snake) do
-        if segment.x == head.x and segment.y == head.y then
+        if segment == head then
             print("Your head esplode. Do better.")
             restart_game()
             return
         end
     end
     snake[#snake + 1] = head
-    if apple.x == head.x and apple.y == head.y then
+    if apple == head then
         print("You ate apple. Nom. Nom.")
         apple = random_point()
         score = score + 1
@@ -58,7 +58,7 @@ end
 
 function init()
     set_screen_mode(ScreenMode.hires)
-    game_bounds = Rect(0, 0, screen.bounds.w / 8, screen.bounds.h / 8)
+    game_bounds = Rect(Point(0, 0), screen.bounds / 8)
     screen.load_sprites("dingbads.bin")
     restart_game()
     timer:init(move, 100)
@@ -80,9 +80,9 @@ function render(time)
     screen.pen = Pen(0, 0, 0)
     screen.clear()
     for i,segment in ipairs(snake) do
-        screen.sprite(sprite_snake, Point(segment.x * 8, segment.y * 8))
+        screen.sprite(sprite_snake, segment * 8)
     end
-    screen.sprite(sprite_apple, Point(apple.x * 8, apple.y * 8))
+    screen.sprite(sprite_apple, apple * 8)
     screen.pen = Pen(255, 255, 255)
     screen.text("score: " .. score, outline_font, Point(0, 0))
 end

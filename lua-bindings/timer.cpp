@@ -61,7 +61,6 @@ static int timer_delete(lua_State* L){
 }
 
 static int timer_index(lua_State* L){
-    int nargs = lua_gettop(L);
     Timer *timer = reinterpret_cast<Timer*>(lua_touserdata(L, 1));
     std::string_view method = luaL_checkstring(L, 2);
 

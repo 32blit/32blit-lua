@@ -3,7 +3,6 @@
 using namespace blit;
 
 static int vec2_dot(lua_State* L){
-    int nargs = lua_gettop(L);
     Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
     Vec2 *vec2_b = lua_blit_checkvec2(L, 2);
     float result = vec2_a->dot(*vec2_b);
@@ -12,7 +11,6 @@ static int vec2_dot(lua_State* L){
 }
 
 static int vec2_cross(lua_State* L){
-    int nargs = lua_gettop(L);
     Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
     Vec2 *vec2_b = lua_blit_checkvec2(L, 2);
     float result = vec2_a->cross(*vec2_b);
@@ -21,7 +19,6 @@ static int vec2_cross(lua_State* L){
 }
 
 static int vec2_angle(lua_State* L){
-    int nargs = lua_gettop(L);
     Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
     Vec2 *vec2_b = lua_blit_checkvec2(L, 2);
     float result = vec2_a->angle(*vec2_b);
@@ -30,14 +27,12 @@ static int vec2_angle(lua_State* L){
 }
 
 static int vec2_normalize(lua_State* L){
-    int nargs = lua_gettop(L);
     Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
     vec2_a->normalize();
     return 0;
 }
 
 static int vec2_rotate(lua_State* L){
-    int nargs = lua_gettop(L);
     Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
     float a = luaL_checknumber(L, 2);
     vec2_a->rotate(a);
@@ -45,7 +40,6 @@ static int vec2_rotate(lua_State* L){
 }
 
 static int vec2_new(lua_State* L){
-    int nargs = lua_gettop(L);
     float x = luaL_checknumber(L, 1);
     float y = luaL_checknumber(L, 2);
     lua_blit_pushvec2(L, Vec2(x, y));
@@ -86,6 +80,41 @@ static int vec2_index(lua_State* L){
     return 0;
 }
 
+static int vec2_add(lua_State *L){
+    Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
+    Vec2 *vec2_b = reinterpret_cast<Vec2*>(lua_touserdata(L, 2));
+    lua_blit_pushvec2(L, *vec2_a + *vec2_b);
+    return 1;
+}
+
+static int vec2_mul(lua_State *L){
+    Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
+    Vec2 *vec2_b = reinterpret_cast<Vec2*>(lua_touserdata(L, 2));
+    lua_blit_pushvec2(L, *vec2_a * *vec2_b);
+    return 1;
+}
+
+static int vec2_div(lua_State *L){
+    Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
+    Vec2 *vec2_b = reinterpret_cast<Vec2*>(lua_touserdata(L, 2));
+    lua_blit_pushvec2(L, *vec2_a / *vec2_b);
+    return 1;
+}
+
+static int vec2_eq(lua_State *L){
+    Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
+    Vec2 *vec2_b = reinterpret_cast<Vec2*>(lua_touserdata(L, 2));
+    lua_pushboolean(L, *vec2_a == *vec2_b);
+    return 1;
+}
+
+static int vec2_tostring(lua_State *L){
+    Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
+    std::string repr = std::to_string(vec2_a->x) + " " + std::to_string(vec2_a->y);
+    lua_pushstring(L, repr.c_str());
+    return 1;
+}
+
 void lua_blit_pushvec2(lua_State* L, Vec2 p) {
     new(lua_newuserdata(L, sizeof(Vec2))) Vec2(p);
     luaL_setmetatable(L, LUA_BLIT_VEC2);
@@ -102,5 +131,10 @@ void lua_blit_register_vec2(lua_State *L) {
     lua_pushcfunction(L, vec2_delete); lua_setfield(L, -2, "__gc");
     lua_pushcfunction(L, vec2_index); lua_setfield(L, -2, "__index");
     lua_pushcfunction(L, vec2_index); lua_setfield(L, -2, "__newindex");
+    lua_pushcfunction(L, vec2_add); lua_setfield(L, -2, "__add");
+    lua_pushcfunction(L, vec2_mul); lua_setfield(L, -2, "__mul");
+    lua_pushcfunction(L, vec2_div); lua_setfield(L, -2, "__div");
+    lua_pushcfunction(L, vec2_eq); lua_setfield(L, -2, "__eq");
+    lua_pushcfunction(L, vec2_tostring); lua_setfield(L, -2, "__tostring");
     lua_pop(L, 1);
 }

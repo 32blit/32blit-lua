@@ -3,7 +3,6 @@
 using namespace blit;
 
 int sprite(lua_State *L) {
-    int nargs = lua_gettop(L);
     Point *pos = lua_blit_checkpoint(L, 2);
 
     // (int, point)
@@ -32,7 +31,6 @@ int sprite(lua_State *L) {
 }
 
 int load_sprites(lua_State *L) {
-    int nargs = lua_gettop(L);
     std::string filename = luaL_checkstring(L, 1);
     if(screen.sprites != nullptr) {
         delete screen.sprites->data;
