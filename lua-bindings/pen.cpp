@@ -3,13 +3,18 @@
 using namespace blit;
 
 static int pen_new(lua_State* L){
-    int a = 255;
+    uint8_t a = 255;
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t b = 0;
     int nargs = lua_gettop(L);
-    int r = (int32_t)luaL_checknumber(L, 1);
-    int g = (int32_t)luaL_checknumber(L, 2);
-    int b = (int32_t)luaL_checknumber(L, 3);
-    if(nargs == 4){
-        a = (int32_t)luaL_checknumber(L, 4);
+    if(nargs >= 3){
+        r = (int32_t)luaL_checknumber(L, 1);
+        g = (int32_t)luaL_checknumber(L, 2);
+        b = (int32_t)luaL_checknumber(L, 3);
+    }
+    if(nargs == 4 || nargs == 1){
+        a = (int32_t)luaL_checknumber(L, nargs);
     }
     new(lua_newuserdata(L, sizeof(Pen))) Pen(r, g, b, a);
     luaL_setmetatable(L, LUA_BLIT_PEN);

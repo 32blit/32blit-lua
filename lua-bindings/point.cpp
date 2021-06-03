@@ -56,6 +56,26 @@ static int point_add(lua_State *L){
         lua_blit_pushpoint(L, *point_a + *vec_b);
         return 1;
     }
+
+    return 0;
+}
+
+static int point_sub(lua_State *L){
+    Point *point_a = reinterpret_cast<Point*>(lua_touserdata(L, 1));
+
+    auto point_b = reinterpret_cast<Point *>(luaL_testudata(L, 2, LUA_BLIT_POINT));
+    if(point_b) {
+        lua_blit_pushpoint(L, *point_a - *point_b);
+        return 1;
+    }
+
+    auto vec_b = reinterpret_cast<Vec2 *>(luaL_testudata(L, 2, LUA_BLIT_VEC2));
+    if(vec_b) {
+        lua_blit_pushpoint(L, *point_a - *vec_b);
+        return 1;
+    }
+
+    return 0;
 }
 
 static int point_mul(lua_State *L){
@@ -114,6 +134,7 @@ void lua_blit_register_point(lua_State *L) {
     lua_pushcfunction(L, point_index); lua_setfield(L, -2, "__newindex");
 
     lua_pushcfunction(L, point_add); lua_setfield(L, -2, "__add");
+    lua_pushcfunction(L, point_sub); lua_setfield(L, -2, "__sub");
     lua_pushcfunction(L, point_mul); lua_setfield(L, -2, "__mul");
     lua_pushcfunction(L, point_div); lua_setfield(L, -2, "__div");
     lua_pushcfunction(L, point_eq); lua_setfield(L, -2, "__eq");
