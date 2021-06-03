@@ -48,7 +48,7 @@ jobs:
     runs-on: ${{matrix.os}}
 
     env:
-      RELEASE_FILE: ${{github.event.repository.name}}-${{github.event.release.tag_name}}-${{matrix.release-suffix}}
+      RELEASE_FILE: ${{github.event.repository.name}}-${{github.event.release.tag_name || github.sha}}-${{matrix.release-suffix}}
 
     steps:
     # Check out the main repo
@@ -104,11 +104,22 @@ jobs:
 
     # When it's a release, generate tar/zip files of the build
     - name: Package Release
-      if: github.event_name == 'release' && matrix.release-suffix != ''
       shell: bash
       working-directory: ${{runner.workspace}}/main/build
       run: |
         cmake --build . --config $BUILD_TYPE --target package
+
+    - name: Tar artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{env.RELEASE_FILE}}.tar.gz
+        path: ${{runner.workspace}}/main/build/${{env.RELEASE_FILE}}.tar.gz
+
+    - name: Zip artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{runner.workspace}}/main/build/${{env.RELEASE_FILE}}.zip
+        name: ${{env.RELEASE_FILE}}.zip
 
     # Push the tar file to the release
     - name: Upload tar
