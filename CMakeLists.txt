@@ -15,7 +15,12 @@ set(PROJECT_SOURCE
   lua-bindings/sprites.cpp
   lua-bindings/timer.cpp
   lua-bindings/screen.cpp)
-set(PROJECT_DISTRIBS LICENSE README.md)
+
+set(PROJECT_DISTRIBS
+    LICENSE
+    README.md)
+
+set(PROJECT_EXAMPLES ${CMAKE_CURRENT_LIST_DIR}/examples)
 
 # Build configuration; approach this with caution!
 if(MSVC)
@@ -35,7 +40,10 @@ target_link_libraries(${PROJECT_NAME} lua)
 add_custom_target (flash DEPENDS ${PROJECT_NAME}.flash)
 
 # setup release packages
+include (${CMAKE_CURRENT_BINARY_DIR}/assets.cmake)
+install (FILES ${ASSET_OUTPUTS} DESTINATION assets/)
 install (FILES ${PROJECT_DISTRIBS} DESTINATION .)
+install (DIRECTORY ${PROJECT_EXAMPLES} DESTINATION .)
 set (CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
 set (CPACK_GENERATOR "ZIP" "TGZ")
 include (CPack)
