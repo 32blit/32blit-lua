@@ -2,20 +2,6 @@
 
 using namespace blit;
 
-struct CallbackData {
-    lua_State* L;
-    lua_Integer fn;
-};
-
-void timer_callback(Timer &t) {
-    CallbackData *data = (CallbackData *)(t.user_data);
-    lua_rawgeti(data->L, LUA_REGISTRYINDEX, data->fn);
-    if(lua_pcall(data->L, 0, 0, 0 ) != 0){
-        printf("Failed to call the callback!\n %s\n", lua_tostring(data->L, -1));
-        return;
-    }
-}
-
 static int timer_start(lua_State* L){
     reinterpret_cast<Timer*>(lua_touserdata(L, 1))->start();
     return 0;
@@ -39,8 +25,13 @@ static int timer_init(lua_State* L){
     lua_pop(L, 1);
 
     lua_Integer callback = luaL_ref(L, LUA_REGISTRYINDEX);
-    timer->init(timer_callback, timeout, loop_count);
-    timer->user_data = new CallbackData{L, callback};
+    timer->init([callback, L](Timer &t) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, callback);
+        if(lua_pcall(L, 0, 0, 0 ) != 0){
+            printf("Failed to call the callback!\n %s\n", lua_tostring(L, -1));
+            return;
+        }
+    }, timeout, loop_count);
 
     return 0;
 }
@@ -53,9 +44,6 @@ static int timer_new(lua_State* L){
 
 static int timer_delete(lua_State* L){
     Timer *timer = reinterpret_cast<Timer*>(lua_touserdata(L, 1));
-    if(timer->user_data != nullptr) {
-        delete (CallbackData *)(timer->user_data);
-    }
     delete timer;
     return 0;
 }
