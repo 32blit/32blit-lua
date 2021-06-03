@@ -48,7 +48,7 @@ jobs:
     runs-on: ${{matrix.os}}
 
     env:
-      RELEASE_FILE: ${{github.event.repository.name}}-${{github.event.release.tag_name}}-${{matrix.release-suffix}}
+      RELEASE_FILE: ${{github.event.repository.name}}-${{github.event.release.tag_name || github.sha}}-${{matrix.release-suffix}}
 
     steps:
     # Check out the main repo
