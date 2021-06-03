@@ -1,8 +1,9 @@
 v = Vec2(160, 120)
 
 function init()
+    set_screen_mode(ScreenMode.hires)
     blit.debug("hello world")
-    blit.load_sprites("dingbads.bin")
+    screen.load_sprites("dingbads.bin")
 
     local point = Point(10, 10);
     point.x = 1
@@ -13,6 +14,28 @@ function init()
     vec2.x = 1
     vec2.y = 2
     vec2 = Vec2(vec2.x, vec2.y)
+
+    local rect = Rect(0, 0, 10, 10)
+    rect:contains(Point(5, 5))
+    w = rect.size.w
+    h = rect.size.h
+
+    result = Rect(5, 4, 6, 6):intersection(Rect(4, 4, 6, 3))
+    print(result.x, result.y, result.w, result.h)
+
+    result = Rect(5, 5, 10, 10)
+    result:inflate(1)
+    print(result.x, result.y, result.w, result.h)
+
+    clamp_point = Point(3, 3)
+    clamped_point = Rect(5, 5, 10, 10):clamp(clamp_point)
+    print(clamped_point.x, clamped_point.y)
+
+    local vecA = Vec2(10, 10)
+    local vecB = Vec2(10, 10)
+    dot = vecA:dot(vecB)
+    cross = vecA:cross(vecB)
+    angle = vecA:angle(vecB)
 
     local size = Size(10, 10);
     size.w = 1
@@ -42,38 +65,38 @@ function random_sprites(time)
     local x = p.x + math.random(-50, 50)
     local y = p.y + math.random(-50, 50)
     local i = math.random(0, 63)
-    blit.sprite(i, Point(x, y))
+    screen.sprite(i, Point(x, y))
 end
 
 function random_pixels(time)
     local r = math.random(0, 255)
     local g = math.random(0, 255)
     local b = math.random(0, 255)
-    blit.pen(Pen(r, g, b))
+    screen.pen = Pen(r, g, b)
     local x = math.random(0, 319)
     local y = math.random(0, 239)
-    blit.pixel(Point(x, y))
+    screen.pixel(Point(x, y))
 end
 
 function random_rects(time)
     local r = math.random(0, 255)
     local g = math.random(0, 255)
     local b = math.random(0, 255)
-    blit.pen(Pen(r, g, b))
+    screen.pen = Pen(r, g, b)
     local x = math.random(0, 319)
     local y = math.random(0, 239)
     local w = math.random(0, 319 - x)
     local h = math.random(0, 239 - y)
-    blit.rectangle(Rect(Point(x, y), Size(w, h)))
+    screen.rectangle(Rect(Point(x, y), Size(w, h)))
 end
 
 function intersection_test(time)
     p = Point(v) -- convert Vec2 to Point
-    blit.pen(Pen(0, 0, 0))
-    blit.clear()
+    screen.pen = Pen(0, 0, 0)
+    screen.clear()
 
-    blit.pen(Pen(255, 0, 0))
-    blit.pixel(p)
+    screen.pen = Pen(255, 0, 0)
+    screen.pixel(p)
 
     local x = math.random(0, 319)
     local y = math.random(0, 239)
@@ -82,11 +105,11 @@ function intersection_test(time)
     local r = Rect(Point(x, y), Size(w, h))
 
     if r:contains(p) then
-        blit.pen(Pen(255, 0, 0))
+        screen.pen = Pen(255, 0, 0)
     else
-        blit.pen(Pen(0, 0, 255))
+        screen.pen = Pen(0, 0, 255)
     end
-    blit.rectangle(r)
+    screen.rectangle(r)
 end
 
 function render(time)

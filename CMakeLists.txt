@@ -10,8 +10,11 @@ set(PROJECT_SOURCE
   lua-bindings/point.cpp
   lua-bindings/size.cpp
   lua-bindings/vec2.cpp
+  lua-bindings/vec3.cpp
   lua-bindings/rect.cpp
-  lua-bindings/sprites.cpp)
+  lua-bindings/sprites.cpp
+  lua-bindings/timer.cpp
+  lua-bindings/screen.cpp)
 set(PROJECT_DISTRIBS LICENSE README.md)
 
 # Build configuration; approach this with caution!
@@ -23,7 +26,7 @@ endif()
 find_package(32BLIT CONFIG REQUIRED PATHS ../ /opt)
 
 blit_executable (${PROJECT_NAME} ${PROJECT_SOURCE})
-# blit_assets_yaml (${PROJECT_NAME} assets.yml)
+blit_assets_yaml (${PROJECT_NAME} assets.yml)
 blit_metadata (${PROJECT_NAME} metadata.yml)
 
 target_include_directories(${PROJECT_NAME} PRIVATE lua)
