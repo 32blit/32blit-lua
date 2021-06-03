@@ -41,7 +41,7 @@ add_custom_target (flash DEPENDS ${PROJECT_NAME}.flash)
 
 # setup release packages
 include (${CMAKE_CURRENT_BINARY_DIR}/assets.cmake)
-install (FILES ${ASSET_OUTPUTS} DESTINATION assets/)
+install (FILES ${ASSET_OUTPUTS} DESTINATION bin)
 install (FILES ${PROJECT_DISTRIBS} DESTINATION .)
 install (DIRECTORY ${PROJECT_EXAMPLES} DESTINATION .)
 set (CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
