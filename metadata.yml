@@ -7,5 +7,6 @@ icon:
   file: assets/no-icon.png
 version: v0.0.1
 category: engine
+url: https://github.com/32blit/32blit-lua
 filetypes:
   - lua
