@@ -14,6 +14,8 @@ set(PROJECT_SOURCE
   lua-bindings/rect.cpp
   lua-bindings/sprites.cpp
   lua-bindings/timer.cpp
+  lua-bindings/palette.cpp
+  lua-bindings/surface.cpp
   lua-bindings/screen.cpp)
 
 set(PROJECT_DISTRIBS

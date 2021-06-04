@@ -53,17 +53,6 @@ static int clear(lua_State *L) {
     return 0;
 }
 
-static int pen(lua_State *L) {
-    Pen *p = lua_blit_checkpen(L, 1);
-    screen.pen = *p;
-    return 0;
-}
-
-static int bounds(lua_State *L) {
-    lua_blit_pushsize(L, screen.bounds);
-    return 1;
-}
-
 static int pixel(lua_State *L) {
     Point *p = lua_blit_checkpoint(L, 1);
     screen.pixel(*p);
@@ -177,6 +166,26 @@ static int text(lua_State *L) {
     return 0;
 }
 
+static int screen_blit(lua_State *L) {
+    int nargs = lua_gettop(L);
+    bool hflip = false;
+    if(nargs >= 4) {
+        hflip = lua_toboolean(L, 4);
+    }
+    auto source_surface = lua_blit_checksurface(L, 1);
+    auto source_rect = lua_blit_checkrect(L, 2);
+    auto dest_point = lua_blit_checkpoint(L, 3);
+    screen.blit(source_surface, *source_rect, *dest_point, hflip);
+    return 0;
+}
+
+static int screen_stretch_blit(lua_State *L) {
+    auto source_surface = lua_blit_checksurface(L, 1);
+    auto source_rect = lua_blit_checkrect(L, 2);
+    auto dest_rect = lua_blit_checkrect(L, 3);
+    screen.stretch_blit(source_surface, *source_rect, *dest_rect);
+    return 0;
+}
 
 static int watermark(lua_State *L) {
     screen.watermark();
@@ -204,7 +213,6 @@ static int screen_index(lua_State* L){
         }
     }
 
-    if(method == "test") {lua_pushinteger(L, 59); return 1;}
     if(method == "bounds") {lua_blit_pushsize(L, screen.bounds); return 1;}
     if(method == "pen") {lua_blit_pushpen(L, screen.pen); return 1;}
     if(method == "alpha") {lua_pushinteger(L, screen.alpha); return 1;}
@@ -226,6 +234,8 @@ static const luaL_Reg screen_funcs[] = {
     {"watermark", watermark},
     {"load_sprites", load_sprites},
     {"sprite", sprite},
+    {"blit", screen_blit},
+    {"stretch_blit", screen_stretch_blit},
     {NULL, NULL}
 };
 
@@ -236,6 +246,8 @@ static const luaL_Reg screen_meta_funcs[] = {
 };
 
 void lua_blit_setup_screen (lua_State *L) {
+    // TODO try to make this an instance of the Surface bindings
+    // Assuming that doesn't totally tank performance!
     luaL_newmetatable(L, "screen");
     lua_pushvalue(L, -1);
     luaL_setfuncs(L, screen_funcs, 0);

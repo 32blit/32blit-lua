@@ -86,6 +86,8 @@ void lua_blit_setup_globals (lua_State *L) {
     lua_blit_register_rect(L);
     //lua_blit_register_sprites(L);
     lua_blit_register_timer(L);
+    lua_blit_register_palette(L);
+    lua_blit_register_surface(L);
 
     // And fonts, too
     lua_pushlightuserdata(L, (void *)(&minimal_font));
@@ -104,6 +106,18 @@ void lua_blit_setup_globals (lua_State *L) {
         lua_pushnumber(L, ScreenMode::hires_palette);
         lua_setfield(L, -2, "hires_palette");
     lua_setglobal(L, "ScreenMode");
+
+    // PixelFormat enum
+    lua_newtable(L);
+        lua_pushnumber(L, static_cast<uint8_t>(PixelFormat::M));
+        lua_setfield(L, -2, "M");
+        lua_pushnumber(L, static_cast<uint8_t>(PixelFormat::P));
+        lua_setfield(L, -2, "P");
+        lua_pushnumber(L, static_cast<uint8_t>(PixelFormat::RGB));
+        lua_setfield(L, -2, "RGB");
+        lua_pushnumber(L, static_cast<uint8_t>(PixelFormat::RGBA));
+        lua_setfield(L, -2, "RGBA");
+    lua_setglobal(L, "PixelFormat");
 
     // Button enum
     lua_newtable(L);

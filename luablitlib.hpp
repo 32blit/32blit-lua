@@ -14,6 +14,8 @@
 #define LUA_BLIT_SIZE "Size"
 #define LUA_BLIT_RECT "Rect"
 #define LUA_BLIT_TIMER "Timer"
+#define LUA_BLIT_SURFACE "Surface"
+#define LUA_BLIT_PALETTE "Palette"
 
 LUAMOD_API int luaopen_blit (lua_State *L);
 void lua_blit_setup_globals (lua_State *L);
@@ -46,3 +48,15 @@ void lua_blit_pushrect(lua_State* L, blit::Rect p);
 blit::Rect* lua_blit_checkrect(lua_State *L, int arg);
 
 void lua_blit_register_timer(lua_State *L);
+
+struct Palette {
+    blit::Pen *entries;
+};
+void lua_blit_register_palette(lua_State *L);
+void lua_blit_pushpalette(lua_State* L, Palette *p);
+void lua_blit_pushpalette(lua_State* L, blit::Pen *p);
+Palette* lua_blit_checkpalette(lua_State *L, int arg);
+
+void lua_blit_register_surface(lua_State *L);
+void lua_blit_pushsurface(lua_State* L, blit::Surface s);
+blit::Surface* lua_blit_checksurface(lua_State *L, int arg);
