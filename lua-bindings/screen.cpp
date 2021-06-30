@@ -86,6 +86,39 @@ static int rectangle(lua_State *L) {
     return 0;
 }
 
+static int circle(lua_State *L) {
+    Point *c = lua_blit_checkpoint(L, 1);
+    int32_t r = luaL_checkinteger(L, 2);
+    screen.circle(*c, r);
+    return 0;
+}
+
+static int polygon(lua_State *L) {
+    int count = lua_gettop(L);
+    std::vector <Point> points;
+    if(count == 1 && lua_type(L, 1) == LUA_TTABLE)
+    {
+        // TODO this might be fragile, but how much type checking do we really want?
+        lua_pushnil(L);
+        while (lua_next(L, -2)) {
+            if(lua_type(L, -1) == LUA_TUSERDATA) {
+                points.push_back(*lua_blit_checkpoint(L, -1));
+            }
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 1);
+        screen.polygon(points);
+    }
+    else
+    {
+        for(auto p = 0; p < count; p++) {
+            points.push_back(*lua_blit_checkpoint(L, p + 1));
+        }
+        screen.polygon(points);
+    }
+    return 0;
+}
+
 static int measure_text(lua_State *L) {
     int nargs = lua_gettop(L);
     size_t len;
@@ -227,6 +260,8 @@ static const luaL_Reg screen_funcs[] = {
     {"v_span", v_span},
     {"line", line},
     {"rectangle", rectangle},
+    {"circle", circle},
+    {"polygon", polygon},
     {"text", text},
     {"wrap_text", wrap_text},
     {"measure_text", measure_text},

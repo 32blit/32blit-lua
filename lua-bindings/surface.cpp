@@ -46,6 +46,41 @@ static int surface_rectangle(lua_State *L) {
     return 0;
 }
 
+static int surface_circle(lua_State *L) {
+    Surface *surface = reinterpret_cast<Surface*>(lua_touserdata(L, 1));
+    Point *c = lua_blit_checkpoint(L, 2);
+    int32_t r = luaL_checkinteger(L, 3);
+    surface->circle(*c, r);
+    return 0;
+}
+
+static int surface_polygon(lua_State *L) {
+    Surface *surface = reinterpret_cast<Surface*>(lua_touserdata(L, 1));
+    int count = lua_gettop(L);
+    std::vector <Point> points;
+    if(count == 2 && lua_type(L, 2) == LUA_TTABLE)
+    {
+        // TODO this might be fragile, but how much type checking do we really want?
+        lua_pushnil(L);
+        while (lua_next(L, -2)) {
+            if(lua_type(L, -1) == LUA_TUSERDATA) {
+                points.push_back(*lua_blit_checkpoint(L, -1));
+            }
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 1);
+        surface->polygon(points);
+    }
+    else
+    {
+        for(auto p = 0; p < count; p++) {
+            points.push_back(*lua_blit_checkpoint(L, p + 2));
+        }
+        surface->polygon(points);
+    }
+    return 0;
+}
+
 static int surface_measure_text(lua_State *L) {
     Surface *surface = reinterpret_cast<Surface*>(lua_touserdata(L, 1));
     int nargs = lua_gettop(L);
@@ -233,6 +268,8 @@ static int surface_index(lua_State* L){
     if(method == "v_span") {lua_pushcfunction(L, surface_v_span); return 1;}
     if(method == "line") {lua_pushcfunction(L, surface_line); return 1;}
     if(method == "rectangle") {lua_pushcfunction(L, surface_rectangle); return 1;}
+    if(method == "circle") {lua_pushcfunction(L, surface_circle); return 1;}
+    if(method == "polygon") {lua_pushcfunction(L, surface_polygon); return 1;}
     if(method == "text") {lua_pushcfunction(L, surface_text); return 1;}
     if(method == "wrap_text") {lua_pushcfunction(L, surface_wrap_text); return 1;}
     if(method == "measure_text") {lua_pushcfunction(L, surface_measure_text); return 1;}
