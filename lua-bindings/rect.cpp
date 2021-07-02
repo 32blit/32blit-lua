@@ -86,6 +86,10 @@ static int rect_index(lua_State* L){
     if(method == "y") {lua_pushnumber(L, rect->y); return 1;}
     if(method == "w") {lua_pushnumber(L, rect->w); return 1;}
     if(method == "h") {lua_pushnumber(L, rect->h); return 1;}
+    if(method == "tl") {lua_blit_pushpoint(L, rect->tl()); return 1;}
+    if(method == "tr") {lua_blit_pushpoint(L, rect->tr()); return 1;}
+    if(method == "bl") {lua_blit_pushpoint(L, rect->bl()); return 1;}
+    if(method == "br") {lua_blit_pushpoint(L, rect->br()); return 1;}
     if(method == "center") {lua_blit_pushpoint(L, rect->center()); return 1;}
     if(method == "size") {
         lua_blit_pushsize(L, rect->size());
