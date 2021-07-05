@@ -7,7 +7,7 @@ static int point_new(lua_State* L){
     int32_t x = 0;
     int32_t y = 0;
     if(nargs == 1) {
-        Point *vec = lua_blit_checkpoint(L, 1);
+        Vec2 *vec = lua_blit_checkvec2(L, 1);
         x = (int32_t)vec->x;
         y = (int32_t)vec->y;
     }
