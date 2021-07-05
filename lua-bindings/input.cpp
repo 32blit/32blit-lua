@@ -2,6 +2,9 @@
 
 using namespace blit;
 
+Vec2* ud_joystick;
+Vec3 *ud_tilt;
+
 void input_state_table(lua_State *L, uint32_t input) {
     lua_pushboolean(L, input & Button::A);
     lua_setfield(L, -2, "A");
@@ -42,6 +45,14 @@ void lua_blit_setup_input(lua_State *L) {
         lua_newtable(L);
         lua_setfield(L, -2, "state");
     lua_setglobal(L, "input");
+
+    ud_joystick = new(lua_newuserdata(L, sizeof(Vec2))) Vec2(joystick);
+    luaL_setmetatable(L, LUA_BLIT_VEC2);
+    lua_setglobal(L, "joystick");
+
+    ud_tilt = new(lua_newuserdata(L, sizeof(Vec3))) Vec3(tilt);
+    luaL_setmetatable(L, LUA_BLIT_VEC3);
+    lua_setglobal(L, "tilt");
 }
 
 void lua_blit_update_input(lua_State *L) {
@@ -70,11 +81,6 @@ void lua_blit_update_input(lua_State *L) {
         lua_setfield(L, -2, "state");
     lua_setglobal(L, "input");
 
-    new(lua_newuserdata(L, sizeof(Vec2))) Vec2(joystick);
-    luaL_setmetatable(L, LUA_BLIT_VEC2);
-    lua_setglobal(L, "joystick");
-
-    new(lua_newuserdata(L, sizeof(Vec3))) Vec3(tilt);
-    luaL_setmetatable(L, LUA_BLIT_VEC3);
-    lua_setglobal(L, "tilt");
+    *ud_joystick = joystick;
+    *ud_tilt = tilt;
 }
