@@ -21,8 +21,10 @@ LUAMOD_API int luaopen_blit (lua_State *L);
 void lua_blit_setup_globals (lua_State *L);
 void lua_blit_update_state(lua_State *L);
 
-void lua_blit_setup_screen (lua_State *L);
+void lua_blit_setup_screen(lua_State *L);
+
 void lua_blit_setup_input(lua_State *L);
+void lua_blit_update_input(lua_State *L);
 
 void lua_blit_register_point(lua_State *L);
 void lua_blit_pushpoint(lua_State* L, blit::Point p);

@@ -2,8 +2,7 @@
 
 using namespace blit;
 
-void input_table(lua_State *L, uint32_t input) {
-    lua_newtable(L);
+void input_state_table(lua_State *L, uint32_t input) {
     lua_pushboolean(L, input & Button::A);
     lua_setfield(L, -2, "A");
     lua_pushboolean(L, input & Button::B);
@@ -21,46 +20,61 @@ void input_table(lua_State *L, uint32_t input) {
     lua_setfield(L, -2, "LEFT");
     lua_pushboolean(L, input & Button::DPAD_RIGHT);
     lua_setfield(L, -2, "RIGHT");
+
+    lua_pushboolean(L, input & Button::HOME);
+    lua_setfield(L, -2, "HOME");
+    lua_pushboolean(L, input & Button::MENU);
+    lua_setfield(L, -2, "MENU");
+
+    lua_pushboolean(L, input & Button::JOYSTICK);
+    lua_setfield(L, -2, "JOYSTICK");
 }
-
-static int input_index(lua_State* L){
-    int nargs = lua_gettop(L);
-    std::string_view method = luaL_checkstring(L, 2);
-
-    if(method == "joystick") {lua_blit_pushvec2(L, joystick); return 1;}
-    if(method == "tilt") {lua_blit_pushvec3(L, tilt); return 1;}
-    if(method == "state") {
-        input_table(L, buttons.state);
-        return 1;
-    }
-    if(method == "pressed") {
-        input_table(L, buttons.pressed);
-        return 1;
-    }
-    if(method == "released") {
-        input_table(L, buttons.released);
-        return 1;
-    }
-
-    luaL_error(L, "Unknown property or method `%s` on %s", std::string(method).c_str(), "input");
-    return 0;
-}
-
-static const luaL_Reg input_funcs[] = {
-    {NULL, NULL}
-};
-
-static const luaL_Reg screen_meta_funcs[] = {
-    {"__index", input_index},
-    {"__newindex", input_index},
-    {NULL, NULL}
-};
 
 void lua_blit_setup_input(lua_State *L) {
-    luaL_newmetatable(L, "input");
-    lua_pushvalue(L, -1);
-    luaL_setfuncs(L, input_funcs, 0);
-    luaL_newlib(L, screen_meta_funcs);
-    lua_setmetatable(L, -2);
+    lua_newtable(L);
+    lua_setglobal(L, "buttons");
+
+    lua_newtable(L);
+        lua_newtable(L);
+        lua_setfield(L, -2, "pressed");
+        lua_newtable(L);
+        lua_setfield(L, -2, "released");
+        lua_newtable(L);
+        lua_setfield(L, -2, "state");
     lua_setglobal(L, "input");
+}
+
+void lua_blit_update_input(lua_State *L) {
+    // use "buttons.pressed & Button.RIGHT ~= 0"
+
+    lua_getglobal(L, "buttons");
+        lua_pushinteger(L, buttons.pressed);
+        lua_setfield(L, -2, "pressed");
+        lua_pushinteger(L, buttons.released);
+        lua_setfield(L, -2, "released");
+        lua_pushinteger(L, buttons.state);
+        lua_setfield(L, -2, "state");
+    lua_setglobal(L, "buttons");
+
+    lua_getglobal(L, "input");
+        lua_getfield(L, -1, "pressed");
+        input_state_table(L, buttons.pressed);
+        lua_setfield(L, -2, "pressed");
+
+        lua_getfield(L, -1, "released");
+        input_state_table(L, buttons.released);
+        lua_setfield(L, -2, "released");
+
+        lua_getfield(L, -1, "state");
+        input_state_table(L, buttons.state);
+        lua_setfield(L, -2, "state");
+    lua_setglobal(L, "input");
+
+    new(lua_newuserdata(L, sizeof(Vec2))) Vec2(joystick);
+    luaL_setmetatable(L, LUA_BLIT_VEC2);
+    lua_setglobal(L, "joystick");
+
+    new(lua_newuserdata(L, sizeof(Vec3))) Vec3(tilt);
+    luaL_setmetatable(L, LUA_BLIT_VEC3);
+    lua_setglobal(L, "tilt");
 }
