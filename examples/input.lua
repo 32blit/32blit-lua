@@ -9,16 +9,16 @@ function update(time)
     button_b_colour = Pen(100, 100, 0)
     button_x_colour = Pen(0, 0, 100)
     button_y_colour = Pen(0, 100, 0)
-    if input.state.A then
+    if buttons.state & Button.A ~= 0 then
         button_a_colour = Pen(255, 0, 255)
     end
-    if input.state.B then
+    if buttons.state & Button.B ~= 0 then
         button_b_colour = Pen(255, 255, 0)
     end
-    if input.state.X then
+    if buttons.state & Button.X ~= 0 then
         button_x_colour = Pen(0, 0, 255)
     end
-    if input.state.Y then
+    if buttons.state & Button.Y ~= 0 then
         button_y_colour = Pen(0, 255, 0)
     end
 
@@ -26,16 +26,16 @@ function update(time)
     dpad_d_colour = Pen(100, 100, 100)
     dpad_l_colour = Pen(100, 100, 100)
     dpad_r_colour = Pen(100, 100, 100)
-    if input.state.UP then
+    if buttons.state & Button.UP ~= 0 then
         dpad_u_colour = Pen(200, 200, 200)
     end
-    if input.state.DOWN then
+    if buttons.state & Button.DOWN ~= 0 then
         dpad_d_colour = Pen(200, 200, 200)
     end
-    if input.state.LEFT then
+    if buttons.state & Button.LEFT ~= 0 then
         dpad_l_colour = Pen(200, 200, 200)
     end
-    if input.state.RIGHT then
+    if buttons.state & Button.RIGHT ~= 0 then
         dpad_r_colour = Pen(200, 200, 200)
     end
 
