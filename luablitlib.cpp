@@ -77,6 +77,7 @@ LUAMOD_API int luaopen_blit (lua_State *L) {
 
 void lua_blit_setup_globals (lua_State *L) {
     lua_blit_setup_screen(L);
+    lua_blit_setup_input(L);
 
     // We'll allow all basic types in the global namespace
     lua_blit_register_point(L);
