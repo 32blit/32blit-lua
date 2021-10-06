@@ -89,8 +89,23 @@ static int vec2_add(lua_State *L){
 
 static int vec2_mul(lua_State *L){
     Vec2 *vec2_a = reinterpret_cast<Vec2*>(lua_touserdata(L, 1));
-    Vec2 *vec2_b = reinterpret_cast<Vec2*>(lua_touserdata(L, 2));
-    lua_blit_pushvec2(L, *vec2_a * *vec2_b);
+    float f_b;
+    Vec2 *vec2_b;
+    
+    switch(lua_type(L, 2)) {
+        case LUA_TNUMBER:
+            f_b = lua_tonumber(L, 2);
+            lua_blit_pushvec2(L, *vec2_a * f_b);
+            return 1;
+            break;
+        case LUA_TUSERDATA:
+            vec2_b = reinterpret_cast<Vec2*>(lua_touserdata(L, 2));
+            lua_blit_pushvec2(L, *vec2_a * *vec2_b);
+            return 1;
+            break;
+    }
+    
+    lua_blit_pushvec2(L, *vec2_a);
     return 1;
 }
 
