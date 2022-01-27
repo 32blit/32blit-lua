@@ -37,7 +37,8 @@ add_library(lua STATIC
     wrap/stdio.cpp
 )
 
+target_include_directories(lua PRIVATE ${32BLIT_DIR}/32blit)
+
 if(32BLIT_HW)
     target_include_directories(lua SYSTEM PUBLIC wrap)
-    target_include_directories(lua PRIVATE ${32BLIT_DIR}/32blit)
 endif()

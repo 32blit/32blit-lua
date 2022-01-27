@@ -30,6 +30,7 @@
 #include "ltm.h"
 #include "lvm.h"
 
+#include "engine/fast_code.hpp"
 
 /*
 ** By default, use jump tables in the main interpreter loop on gcc
@@ -1118,8 +1119,7 @@ void luaV_finishOp (lua_State *L) {
 #define vmcase(l)	case l:
 #define vmbreak		break
 
-
-void luaV_execute (lua_State *L, CallInfo *ci) {
+void blit_fast_code(luaV_execute) (lua_State *L, CallInfo *ci) {
   LClosure *cl;
   TValue *k;
   StkId base;
