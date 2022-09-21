@@ -201,22 +201,29 @@ static int surface_load_sprites(lua_State *L, Surface *surface, int first_arg) {
 
 static int surface_blit(lua_State *L, Surface *surface, int first_arg) {
     int nargs = lua_gettop(L);
-    bool hflip = false;
-    if(nargs >= first_arg + 3) {
-        hflip = lua_toboolean(L, first_arg + 3);
-    }
     auto source_surface = lua_blit_checksurface(L, first_arg);
     auto source_rect = lua_blit_checkrect(L, first_arg + 1);
     auto dest_point = lua_blit_checkpoint(L, first_arg + 2);
-    surface->blit(source_surface, *source_rect, *dest_point, hflip);
+
+    if(nargs >= first_arg + 3) {
+        auto transforms = lua_tointeger(L, first_arg + 3);
+        surface->blit(source_surface, *source_rect, *dest_point, transforms);
+    } else
+        surface->blit(source_surface, *source_rect, *dest_point);
     return 0;
 }
 
 static int surface_stretch_blit(lua_State *L, Surface *surface, int first_arg) {
+    int nargs = lua_gettop(L);
     auto source_surface = lua_blit_checksurface(L, first_arg);
     auto source_rect = lua_blit_checkrect(L, first_arg + 1);
     auto dest_rect = lua_blit_checkrect(L, first_arg + 2);
-    surface->stretch_blit(source_surface, *source_rect, *dest_rect);
+
+    if(nargs >= first_arg + 3) {
+        auto transforms = lua_tointeger(L, first_arg + 3);
+        surface->stretch_blit(source_surface, *source_rect, *dest_rect, transforms);
+    } else
+        surface->stretch_blit(source_surface, *source_rect, *dest_rect);
     return 0;
 }
 
