@@ -159,26 +159,68 @@ static int surface_text(lua_State *L, Surface *surface, int first_arg) {
 }
 
 static int surface_sprite(lua_State *L, Surface *surface, int first_arg) {
+    auto nargs = lua_gettop(L);
     Point *pos = lua_blit_checkpoint(L, first_arg + 1);
+
+    Point origin(0, 0);
+    Vec2 scale(1.0f, 1.0f);
+    uint8_t transform = 0;
+    bool has_origin = false;
+
+    // transform is always last
+    int transform_arg = first_arg + 2;
+
+    // check for origin
+    if(nargs >= transform_arg) {
+        auto p = reinterpret_cast<Point *>(luaL_testudata(L, transform_arg, LUA_BLIT_POINT));
+        if(p) {
+            // origin
+            origin = *p;
+            transform_arg++;
+            has_origin = true;
+        }
+        // else if !int error
+    }
+
+    // check for scale
+    if(has_origin && nargs >= transform_arg) {
+        auto v = reinterpret_cast<Vec2 *>(luaL_testudata(L, transform_arg, LUA_BLIT_VEC2));
+        if(v) {
+            // scale
+            scale = *v;
+            transform_arg++;
+        } else if(lua_isnumber(L, transform_arg)) {
+            float f = lua_tonumber(L, transform_arg);
+            scale = Vec2(f, f);
+            transform_arg++;
+        }
+        // else if !int error
+    }
+
+    // ... and the transform
+    if(nargs >= transform_arg && lua_isinteger(L, transform_arg)) {
+        transform = lua_tointeger(L, transform_arg);
+    }
 
     // (int, point)
     if(lua_isinteger(L, first_arg)) {
         unsigned int i = lua_tointeger(L, first_arg);
-        surface->sprite(i, *pos);
+        // TODO: always using the scale overload will be slower (blit vs stretch_blit)
+        surface->sprite(i, *pos, origin, scale, transform);
         return 0;
     }
 
     // (Point, Point)
     auto p = reinterpret_cast<Point *>(luaL_testudata(L, first_arg, LUA_BLIT_POINT));
     if(p) {
-        surface->sprite(*p, *pos);
+        surface->sprite(*p, *pos, origin, scale, transform);
         return 0;
     }
 
     // (Rect, Point)
     auto r = reinterpret_cast<Rect *>(luaL_testudata(L, first_arg, LUA_BLIT_RECT));
     if(r) {
-        surface->sprite(*r, *pos);
+        surface->sprite(*r, *pos, origin, scale, transform);
         return 0;
     }
 
