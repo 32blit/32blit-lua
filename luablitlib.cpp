@@ -67,7 +67,6 @@ void lua_blit_setup_globals (lua_State *L) {
     lua_blit_register_vec2(L);
     lua_blit_register_size(L);
     lua_blit_register_rect(L);
-    //lua_blit_register_sprites(L);
     lua_blit_register_timer(L);
     lua_blit_register_palette(L);
     lua_blit_register_surface(L);
