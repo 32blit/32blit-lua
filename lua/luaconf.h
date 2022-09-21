@@ -753,8 +753,19 @@
 ** without modifying the main part of the file.
 */
 
+#ifdef TARGET_32BLIT_HW
+int fp_setjmp(int *regs);
+int fp_longjmp(int *regs);
 
+struct fp_jmp_buf
+{
+    int regs[10 + 16];
+};
 
+#define LUAI_THROW(L,c) fp_longjmp((c)->b.regs)
+#define LUAI_TRY(L,c,a)	if (fp_setjmp((c)->b.regs) == 0) { a }
+#define luai_jmpbuf     struct fp_jmp_buf
+#endif
 
 
 #endif

@@ -19,6 +19,10 @@ set(PROJECT_SOURCE
   lua-bindings/input.cpp
   lua-bindings/screen.cpp)
 
+if(32BLIT_HW)
+  list(APPEND PROJECT_SOURCE setjmp.c)
+endif()
+
 set(PROJECT_DISTRIBS
     LICENSE
     README.md)
