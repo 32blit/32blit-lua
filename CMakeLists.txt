@@ -16,7 +16,7 @@ set(PROJECT_SOURCE
   lua-bindings/palette.cpp
   lua-bindings/surface.cpp
   lua-bindings/input.cpp
-  lua-bindings/screen.cpp)
+)
 
 set(PROJECT_DISTRIBS
     LICENSE
