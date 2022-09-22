@@ -421,6 +421,7 @@ static int surface_index(lua_State* L){
     if(method == "wrap_text") {lua_pushcfunction(L, surface_wrap_text); return 1;}
     if(method == "measure_text") {lua_pushcfunction(L, surface_measure_text); return 1;}
     if(method == "clear") {lua_pushcfunction(L, surface_clear); return 1;}
+    if(method == "watermark") {lua_pushcfunction(L, surface_watermark); return 1;}
     if(method == "load_sprites") {lua_pushcfunction(L, surface_load_sprites); return 1;}
     if(method == "sprite") {lua_pushcfunction(L, surface_sprite); return 1;}
     if(method == "blit") {lua_pushcfunction(L, surface_blit); return 1;}
