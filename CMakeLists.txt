@@ -19,6 +19,10 @@ set(PROJECT_SOURCE
   lua-bindings/input.cpp
   lua-bindings/screen.cpp)
 
+if(32BLIT_HW)
+  list(APPEND PROJECT_SOURCE setjmp.c)
+endif()
+
 set(PROJECT_DISTRIBS
     LICENSE
     README.md)
@@ -27,10 +31,11 @@ set(PROJECT_EXAMPLES ${CMAKE_CURRENT_LIST_DIR}/examples)
 
 # Build configuration; approach this with caution!
 if(MSVC)
-  add_compile_options("/W4" "/wd4244" "/wd4324")
+  add_compile_options("/W4" "/wd4244" "/wd4324" "/wd4458" "/wd4100")
 else()
-  add_compile_options("-Wall" "-Wextra" "-Wdouble-promotion")
+  add_compile_options("-Wall" "-Wextra" "-Wdouble-promotion" "-Wno-unused-parameter")
 endif()
+
 find_package(32BLIT CONFIG REQUIRED PATHS ../ /opt)
 
 blit_executable (${PROJECT_NAME} ${PROJECT_SOURCE})
