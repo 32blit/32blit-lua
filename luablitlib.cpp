@@ -67,7 +67,6 @@ void lua_blit_setup_globals (lua_State *L) {
     lua_blit_register_vec2(L);
     lua_blit_register_size(L);
     lua_blit_register_rect(L);
-    //lua_blit_register_sprites(L);
     lua_blit_register_timer(L);
     lua_blit_register_palette(L);
     lua_blit_register_surface(L);
@@ -160,4 +159,22 @@ void lua_blit_setup_globals (lua_State *L) {
         lua_pushinteger(L, TextAlign::bottom_center);
         lua_setfield(L, -2, "bottom_center");
     lua_setglobal(L, "TextAlign");
+
+    // SpriteTransform enum
+    lua_newtable(L);
+        lua_pushinteger(L, SpriteTransform::NONE);
+        lua_setfield(L, -2, "NONE");
+        lua_pushinteger(L, SpriteTransform::HORIZONTAL);
+        lua_setfield(L, -2, "HORIZONTAL");
+        lua_pushinteger(L, SpriteTransform::VERTICAL);
+        lua_setfield(L, -2, "VERTICAL");
+        lua_pushinteger(L, SpriteTransform::XYSWAP);
+        lua_setfield(L, -2, "XYSWAP");
+        lua_pushinteger(L, SpriteTransform::R90);
+        lua_setfield(L, -2, "R90");
+        lua_pushinteger(L, SpriteTransform::R180);
+        lua_setfield(L, -2, "R180");
+        lua_pushinteger(L, SpriteTransform::R270);
+        lua_setfield(L, -2, "R270");
+    lua_setglobal(L, "SpriteTransform");
 }

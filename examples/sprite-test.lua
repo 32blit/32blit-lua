@@ -60,17 +60,17 @@ function init()
     -- Draw a heart rotated 90, 180 and 270 degrees
     screen.pen = Pen(40, 60, 80)
     screen.rectangle(Rect(50, 80, 8, 8))
-    --screen.sprite(Point(0, 4), Point(50, 80), SpriteTransform::R90)
+    screen.sprite(Point(0, 4), Point(50, 80), SpriteTransform.R90)
     screen.rectangle(Rect(60, 80, 8, 8))
-    --screen.sprite(Point(0, 4), Point(60, 80), SpriteTransform::R180)
+    screen.sprite(Point(0, 4), Point(60, 80), SpriteTransform.R180)
     screen.rectangle(Rect(70, 80, 8, 8))
-    --screen.sprite(Point(0, 4), Point(70, 80), SpriteTransform::R270)
+    screen.sprite(Point(0, 4), Point(70, 80), SpriteTransform.R270)
   
     -- Draw a heart flipped horiontally and vertically
     screen.rectangle(Rect(50, 100, 8, 8))
-    --screen.sprite(Point(0, 4), Point(50, 100), SpriteTransform::HORIZONTAL)
+    screen.sprite(Point(0, 4), Point(50, 100), SpriteTransform.HORIZONTAL)
     screen.rectangle(Rect(60, 100, 8, 8))
-    --screen.sprite(Point(0, 4), Point(60, 100), SpriteTransform::VERTICAL)
+    screen.sprite(Point(0, 4), Point(60, 100), SpriteTransform.VERTICAL)
     
   
     -- Right examples
@@ -83,6 +83,7 @@ function init()
       Rect(130, 16, 16, 16)
     )
     ]]
+    screen.sprite(1, Point(130, 16), Point(0, 0), 2.0)
   
   
     local ms_end = blit.now()
