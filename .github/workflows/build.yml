@@ -7,9 +7,11 @@ name: Build
 
 on:
   push:
+    branches:
+      - '**' # only run on branches
   pull_request:
   release:
-    types: [created]
+    types: [published]
 
 env:
   BUILD_TYPE: Release
@@ -43,7 +45,7 @@ jobs:
           - os: windows-latest
             name: Visual Studio
             release-suffix: WIN64
-            cmake-args: -D32BLIT_DIR=$GITHUB_WORKSPACE/32blit-sdk -DSDL2_DIR=$GITHUB_WORKSPACE/32blit-sdk/vs/sdl
+            cmake-args: -D32BLIT_DIR=$GITHUB_WORKSPACE/32blit-sdk
 
     runs-on: ${{matrix.os}}
 
@@ -53,13 +55,13 @@ jobs:
     steps:
     # Check out the main repo
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: main
 
     # Check out the 32Blit API we build against
     - name: Checkout 32Blit API
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: 32blit/32blit-sdk
         path: 32blit-sdk
@@ -93,7 +95,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{runner.workspace}}/main/build
-      run: cmake $GITHUB_WORKSPACE/main -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCPACK_PACKAGE_FILE_NAME=${{env.RELEASE_FILE}} ${{matrix.cmake-args}}
+      run: ${{matrix.cmake-prefix}} cmake $GITHUB_WORKSPACE/main -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCPACK_PACKAGE_FILE_NAME=${{env.RELEASE_FILE}} ${{matrix.cmake-args}}
 
     # And then run the build itself
     - name: Build
@@ -110,13 +112,13 @@ jobs:
         cmake --build . --config $BUILD_TYPE --target package
 
     - name: Tar artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ${{env.RELEASE_FILE}}.tar.gz
         path: ${{runner.workspace}}/main/build/${{env.RELEASE_FILE}}.tar.gz
 
     - name: Zip artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ${{runner.workspace}}/main/build/${{env.RELEASE_FILE}}.zip
         name: ${{env.RELEASE_FILE}}.zip
