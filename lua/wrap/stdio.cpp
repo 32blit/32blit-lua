@@ -1,5 +1,3 @@
-#ifdef TARGET_32BLIT_HW
-
 #include <cstdarg>
 #include <stdio.h>
 #include <cstring>
@@ -212,5 +210,3 @@ int wrap_fflush(wrap_FILE *file)
 {
     return 0;
 }
-
-#endif
