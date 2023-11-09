@@ -23,7 +23,13 @@ void init() {
     if(!launchPath) {
         launchPath = "main.lua";
     }
-    luaL_loadfile(L, launchPath);
+    auto err = luaL_loadfile(L, launchPath);
+
+    if(err) {
+        blit::debugf("Error loading %s: %s\n", launchPath, lua_tostring(L, -1));
+        has_render = has_update = false;
+        return;
+    }
 
     // Super important priming call that makes stuff not explode
     if(lua_pcall(L, 0, 0, 0) != 0){
