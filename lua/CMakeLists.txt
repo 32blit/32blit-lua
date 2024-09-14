@@ -38,6 +38,9 @@ add_library(lua STATIC
 
 target_include_directories(lua PRIVATE ${32BLIT_DIR}/32blit)
 
+set(LUA_PATH "\"/lib/?.lua\;/lib/?/init.lua\;./?.lua\;./?/init.lua\"")
+target_compile_definitions(lua PRIVATE "LUA_PATH_DEFAULT=${LUA_PATH}")
+
 if(32BLIT_HW OR CMAKE_SYSTEM_NAME STREQUAL "PICO")
     target_include_directories(lua SYSTEM PUBLIC wrap)
     target_sources(lua PRIVATE wrap/stdio.cpp)
