@@ -276,6 +276,23 @@ static int surface_watermark(lua_State *L, Surface *surface, int first_arg) {
     return 0;
 }
 
+static int surface_load(lua_State* L) {
+    std::string filename = luaL_checkstring(L, 1);
+
+    auto tmp_surface = Surface::load(base_path + "/" + filename);
+
+    // move data to lua-allocated surface
+    auto ret_surface = new(lua_newuserdata(L, sizeof(Surface))) Surface(tmp_surface->data, tmp_surface->format, tmp_surface->bounds);
+
+    std::swap(tmp_surface->palette, ret_surface->palette);
+
+    tmp_surface->data = nullptr; // wouldn't get deleted anyway
+    delete tmp_surface;
+
+    luaL_setmetatable(L, LUA_BLIT_SURFACE);
+    return 1;
+}
+
 static int surface_new(lua_State* L){
     int nargs = lua_gettop(L);
     auto pixel_format = PixelFormat::RGBA;
@@ -442,13 +459,30 @@ Surface* lua_blit_checksurface(lua_State *L, int arg) {
     return reinterpret_cast<Surface*>(t);
 }
 
+static int surface_index_static(lua_State *L) {
+    std::string_view method = luaL_checkstring(L, 2);
+
+    if(method == "load") {lua_pushcfunction(L, surface_load); return 1;}
+
+    return 0;
+}
+
 void lua_blit_register_surface(lua_State *L) {
-    lua_register(L, LUA_BLIT_SURFACE, surface_new);
+    // surface metatable
     luaL_newmetatable(L, LUA_BLIT_SURFACE);
     lua_pushcfunction(L, surface_delete); lua_setfield(L, -2, "__gc");
     lua_pushcfunction(L, surface_index); lua_setfield(L, -2, "__index");
     lua_pushcfunction(L, surface_index); lua_setfield(L, -2, "__newindex");
     lua_pop(L, 1);
+
+    // Surface ctor/static methods
+    lua_pushcfunction(L, surface_new);
+
+    lua_createtable(L, 0, 1);
+    lua_pushcfunction(L, surface_index_static); lua_setfield(L, -2, "__index");
+    lua_setmetatable(L, -2);
+
+    lua_setglobal(L, LUA_BLIT_SURFACE);
 }
 
 // screen
