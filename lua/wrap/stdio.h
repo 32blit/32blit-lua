@@ -29,6 +29,8 @@ int wrap_ferror(wrap_FILE *file);
 int wrap_clearerr(wrap_FILE *file);
 int wrap_fflush(wrap_FILE *file);
 
+wrap_FILE *wrap_tmpfile();
+
 extern wrap_FILE *wrap_stdin;
 extern wrap_FILE *wrap_stdout;
 extern wrap_FILE *wrap_stderr;
@@ -54,6 +56,7 @@ extern wrap_FILE *wrap_stderr;
 #define ferror wrap_ferror
 #define clearerr wrap_clearerr
 #define fflush wrap_fflush
+#define tmpfile wrap_tmpfile
 
 #ifdef __cplusplus
 }

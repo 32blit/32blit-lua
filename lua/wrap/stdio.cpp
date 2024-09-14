@@ -210,3 +210,8 @@ int wrap_fflush(wrap_FILE *file)
 {
     return 0;
 }
+
+wrap_FILE *wrap_tmpfile()
+{
+    return nullptr;
+}
