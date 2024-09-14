@@ -4,6 +4,8 @@
 
 #include "engine/file.hpp"
 
+extern std::string base_path;
+
 // wrap stdio funcs around blit:: funcs
 wrap_FILE *wrap_stdin = nullptr;
 wrap_FILE *wrap_stdout = nullptr;
@@ -44,8 +46,14 @@ wrap_FILE *wrap_fopen(const char *filename, const char *mode)
             blit_mode |= blit::OpenMode::read;
     }
 
+    std::string filename_str = filename;
+
+    // adjust relative filenames to root
+    if(filename[0] == '.' && filename[1] == '/')
+        filename_str = base_path + (filename + 1);
+
     auto ret = new wrap_FILE;
-    ret->file.open(filename, blit_mode);
+    ret->file.open(filename_str, blit_mode);
     ret->offset = 0;
 
     ret->getc_buf_len = ret->getc_buf_off = 0;

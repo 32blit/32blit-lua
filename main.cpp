@@ -8,6 +8,8 @@ lua_State *L;
 bool has_update = true;
 bool has_render = true;
 
+std::string base_path;
+
 void init() {
     set_screen_mode(ScreenMode::lores);
     screen.pen = Pen(0, 0, 0, 255);
@@ -20,9 +22,18 @@ void init() {
     lua_blit_update_state(L);
 
     auto launchPath = blit::get_launch_path();
+
     if(!launchPath) {
         launchPath = "main.lua";
     }
+
+
+    // set base path from dir of main script
+    auto pos = std::string_view(launchPath).find_last_of('/');
+    if(pos != std::string_view::npos)
+        base_path = std::string_view(launchPath).substr(0, pos);
+
+    // load the script
     auto err = luaL_loadfile(L, launchPath);
 
     if(err) {
