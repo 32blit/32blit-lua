@@ -1,5 +1,7 @@
 #include "../luablitlib.hpp"
 
+extern std::string base_path;
+
 using namespace blit;
 
 static Surface *to_surface(lua_State *L, int arg) {
@@ -237,7 +239,7 @@ static int surface_load_sprites(lua_State *L, Surface *surface, int first_arg) {
         delete surface->sprites;
         surface->sprites = nullptr;
     }
-    surface->sprites = Surface::load(filename);
+    surface->sprites = Surface::load(base_path + "/" + filename);
     return 0;
 }
 
