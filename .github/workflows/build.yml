@@ -38,7 +38,7 @@ jobs:
 
           - os: macos-latest
             name: macOS
-            release-suffix: MACOS
+            #release-suffix: MACOS
             cmake-args: -D32BLIT_DIR=$GITHUB_WORKSPACE/32blit-sdk
             brew-packages: sdl2 sdl2_image sdl2_net pipx
 
@@ -106,18 +106,21 @@ jobs:
 
     # When it's a release, generate tar/zip files of the build
     - name: Package Release
+      if: matrix.release-suffix != ''
       shell: bash
       working-directory: ${{runner.workspace}}/main/build
       run: |
         cmake --build . --config $BUILD_TYPE --target package
 
     - name: Tar artifact
+      if: matrix.release-suffix != ''
       uses: actions/upload-artifact@v3
       with:
         name: ${{env.RELEASE_FILE}}.tar.gz
         path: ${{runner.workspace}}/main/build/${{env.RELEASE_FILE}}.tar.gz
 
     - name: Zip artifact
+      if: matrix.release-suffix != ''
       uses: actions/upload-artifact@v3
       with:
         path: ${{runner.workspace}}/main/build/${{env.RELEASE_FILE}}.zip
