@@ -2,6 +2,12 @@
 #include "lua/lua.hpp"
 #include "luablitlib.hpp"
 
+// really wants to be "if SDL"
+#if !defined(TARGET_32BLIT_HW) && !defined(PICO_BUILD)
+#include "SDL.h"
+#define TARGET_SDL
+#endif
+
 using namespace blit;
 
 lua_State *L;
@@ -9,6 +15,35 @@ bool has_update = true;
 bool has_render = true;
 
 std::string base_path;
+
+static void setup_paths() {
+#ifdef TARGET_SDL
+    // get SDL base path and prepend to what we calculated from the launch path
+    auto full_base_path = base_path;
+
+    auto sdl_base_path = SDL_GetBasePath();
+    if(sdl_base_path)
+        full_base_path = std::string(sdl_base_path) + full_base_path;
+    SDL_free(sdl_base_path);
+
+    if(full_base_path.back() == '/')
+        full_base_path.pop_back();
+
+    // construct lua path rooted at base dir
+    std::string lua_path;
+
+    lua_path.append(full_base_path).append("/lib/?.lua;")
+            .append(full_base_path).append("/lib/?/init.lua;")
+            .append(full_base_path).append("/?.lua;")
+            .append(full_base_path).append("/?/init.lua;");
+
+    // set package.path
+    lua_getglobal(L, "package");
+    lua_pushstring(L, lua_path.c_str());
+    lua_setfield(L, -2, "path");
+    lua_pop(L, 1);
+#endif
+}
 
 void init() {
     set_screen_mode(ScreenMode::lores);
@@ -32,6 +67,8 @@ void init() {
     auto pos = std::string_view(launchPath).find_last_of('/');
     if(pos != std::string_view::npos)
         base_path = std::string_view(launchPath).substr(0, pos);
+
+    setup_paths();
 
     // load the script
     auto err = luaL_loadfile(L, launchPath);
